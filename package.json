@@ -1,6 +1,6 @@
 {
-  "name": "sync-ynab",
-  "version": "1.1.0",
+  "name": "ynab-sync-nubank",
+  "version": "1.0.0",
   "description": "Create OFX from NuBank transactions",
   "main": "index.js",
   "author": "Arthur Nobrega",
