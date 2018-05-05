@@ -1,8 +1,13 @@
+import { distanceInWords } from 'date-fns'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import executeYnabFlow from './ynab'
 import executeNubankFlow from './nubank'
 import db from './db'
+
+function describeAction(action) {
+  return `Nubank ${action.username} => YNAB ${action.account.name} (${action.budget.name})`
+}
 
 async function askToSaveFavorite(_action) {
   let save = true
@@ -25,11 +30,34 @@ async function askToSaveFavorite(_action) {
     db.get('favoriteActions')
       .push({
         ...action,
-        transient: {},
+        transient: undefined,
         when: new Date().getTime(),
       })
       .write()
   }
+}
+
+function actionsToChoices(actions, checked = true) {
+  const now = new Date()
+  let dateSeparator
+
+  return actions
+    .sort((act1, act2) => act1.when <= act2.when)
+    .reduce((accumulator, action) => {
+      const result = [...accumulator]
+      const newDtSep = ` = ${distanceInWords(action.when, now)} ago = `
+      if (!dateSeparator || dateSeparator.localeCompare(newDtSep) !== 0) {
+        dateSeparator = newDtSep
+        result.push(new inquirer.Separator(dateSeparator))
+      }
+      result.push({
+        value: action.id,
+        checked,
+        name: describeAction(action),
+      })
+
+      return result
+    }, [])
 }
 
 async function askForFavoriteActsToRun() {
@@ -38,11 +66,7 @@ async function askForFavoriteActsToRun() {
     type: 'checkbox',
     name: 'favoriteActsIds',
     message: 'Which favorite actions would you like to run?',
-    choices: favoriteActsDb.map(act => ({
-      value: act.id,
-      checked: true,
-      name: `Nubank username ${act.username}`,
-    })),
+    choices: actionsToChoices(favoriteActsDb),
   }])
   return favoriteActsDb.filter(act => favoriteActsIds.indexOf(act.id) !== -1)
 }
@@ -53,10 +77,7 @@ async function askForFavoriteActsToDelete() {
     type: 'checkbox',
     name: 'favoriteActsIds',
     message: 'Which favorite actions would you like to DELETE?',
-    choices: favoriteActsDb.map(act => ({
-      value: act.id,
-      name: `Nubank username ${act.username}`,
-    })),
+    choices: actionsToChoices(favoriteActsDb, false),
   }])
 
   favoriteActsIds.forEach((id) => {

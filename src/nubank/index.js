@@ -62,9 +62,7 @@ async function requestNewToken(username) {
 
 export default async function executeNubankFlow({ action = {} }) {
   let { username } = action
-  if (username) {
-    console.log(chalk.blue(`Nubank username ${username}`))
-  } else {
+  if (!username) {
     username = await askForNubankUsername()
   }
 

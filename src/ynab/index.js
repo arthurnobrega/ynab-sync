@@ -36,7 +36,7 @@ async function askForBudget(budgets) {
     message: 'Which YNAB budget do you want to sync?',
     choices: budgets.map(b => ({ value: b.id, name: `${b.name} (${b.id})` })),
   }])
-  return budgets.filter(budget => budget.id === budgetId)
+  return budgets.filter(budget => budget.id === budgetId)[0]
 }
 
 async function askForAccount(accounts) {
@@ -46,17 +46,14 @@ async function askForAccount(accounts) {
     message: 'Which YNAB account do you want to sync?',
     choices: accounts.map(a => ({ value: a.id, name: `${a.name} (${a.id})` })),
   }])
-  return accounts.filter(account => account.id === accountId)
+  return accounts.filter(account => account.id === accountId)[0]
 }
 
 export default async function executeYnabFlow({ action }) {
-  // TODO: in the future, also include login/token to YNAB
+  // TODO: also include login/token to YNAB
   const { transient } = action
   let { budget, account } = action
-  if (budget && account) {
-    console.log(chalk.blue(`YNAB budget ${budget.name}`))
-    console.log(chalk.blue(`Account ${account.name}`))
-  } else {
+  if (!(budget && account)) {
     const budgets = await getBudgets()
     budget = await askForBudget(budgets)
     const accounts = await getAccounts(budget.id)

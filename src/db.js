@@ -6,9 +6,7 @@ const db = lowdb(adapter)
 
 db.defaults({
   nubankTokens: [],
-  favoriteActions: [
-    { id: 1, username: '01030433143' },
-  ],
+  favoriteActions: [],
 })
   .write()
 
