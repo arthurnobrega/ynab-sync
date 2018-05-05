@@ -36,7 +36,7 @@ async function askForBudget(budgets) {
     message: 'Which YNAB budget do you want to sync?',
     choices: budgets.map(b => ({ value: b.id, name: `${b.name} (${b.id})` })),
   }])
-  return budgetId
+  return budgets.filter(budget => budget.id === budgetId)
 }
 
 async function askForAccount(accounts) {
@@ -46,20 +46,27 @@ async function askForAccount(accounts) {
     message: 'Which YNAB account do you want to sync?',
     choices: accounts.map(a => ({ value: a.id, name: `${a.name} (${a.id})` })),
   }])
-  return accountId
+  return accounts.filter(account => account.id === accountId)
 }
 
-export default async function executeYnabFlow(transactions) {
-  const budgets = await getBudgets()
-  const budgetId = await askForBudget(budgets)
-
-  const accounts = await getAccounts(budgetId)
-  const accountId = await askForAccount(accounts)
+export default async function executeYnabFlow({ action }) {
+  // TODO: in the future, also include login/token to YNAB
+  const { transient } = action
+  let { budget, account } = action
+  if (budget && account) {
+    console.log(chalk.blue(`YNAB budget ${budget.name}`))
+    console.log(chalk.blue(`Account ${account.name}`))
+  } else {
+    const budgets = await getBudgets()
+    budget = await askForBudget(budgets)
+    const accounts = await getAccounts(budget.id)
+    account = await askForAccount(accounts)
+  }
 
   // TODO: Remove this selection of only first transaction
-  const nubankTransaction = transactions[0]
+  const nubankTransaction = transient.transactions[0]
   const transaction = {
-    account_id: accountId,
+    account_id: account.id,
     date: nubankTransaction.time,
     amount: -(nubankTransaction.amount * 10),
     memo: nubankTransaction.description,
@@ -68,5 +75,13 @@ export default async function executeYnabFlow(transactions) {
     import_id: nubankTransaction.id,
   }
 
-  await createTransaction(budgetId, { transaction })
+  await createTransaction(budget.id, { transaction })
+
+  return {
+    action: {
+      ...action,
+      budget,
+      account,
+    },
+  }
 }

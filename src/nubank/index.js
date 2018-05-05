@@ -60,10 +60,9 @@ async function requestNewToken(username) {
 //     return filteredTransactions
 // }
 
-export default async function executeNubankFlow(operation) {
-  let username;
-  if (operation) {
-    ({ username } = operation)
+export default async function executeNubankFlow({ action = {} }) {
+  let { username } = action
+  if (username) {
     console.log(chalk.blue(`Nubank username ${username}`))
   } else {
     username = await askForNubankUsername()
@@ -93,5 +92,11 @@ export default async function executeNubankFlow(operation) {
   const { events: transactions } = await NuBank.getWholeFeed()
   // const transactions = await askForFilterTransactions(transactions)
 
-  return transactions
+  return {
+    action: {
+      ...action,
+      username,
+      transient: { transactions },
+    },
+  }
 }

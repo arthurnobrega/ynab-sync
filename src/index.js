@@ -4,71 +4,102 @@ import executeYnabFlow from './ynab'
 import executeNubankFlow from './nubank'
 import db from './db'
 
-async function askForFavoriteOpsToRun() {
-  const favoriteOpsDb = db.get('favoriteOperations').value()
-  const { favoriteOps } = await inquirer.prompt([{
-    type: 'checkbox',
-    name: 'favoriteOps',
-    message: 'Which favorite operations would you like to run?',
-    choices: favoriteOpsDb.map(op => ({
-      value: op.id,
-      checked: true,
-      name: `Nubank username ${op.username}`,
-    })),
-  }])
-  return favoriteOpsDb.filter(op => favoriteOps.indexOf(op.id) !== -1)
+async function askToSaveFavorite(_action) {
+  let save = true
+  let action = _action
+  if (!action.id) {
+    ({ save } = await inquirer.prompt([{
+      type: 'confirm',
+      name: 'save',
+      message: 'Would you like to save this action as a favorite?',
+      default: true,
+    }]))
+    action = { ...action, id: new Date().getTime() }
+  } else {
+    db.get('favoriteActions')
+      .remove({ id: action.id })
+      .write()
+  }
+
+  if (save) {
+    db.get('favoriteActions')
+      .push({
+        ...action,
+        transient: {},
+        when: new Date().getTime(),
+      })
+      .write()
+  }
 }
 
-async function askForFavoriteOpsToDelete() {
-  const favoriteOpsDb = db.get('favoriteOperations').value()
-  const { favoriteOps } = await inquirer.prompt([{
+async function askForFavoriteActsToRun() {
+  const favoriteActsDb = db.get('favoriteActions').value()
+  const { favoriteActsIds } = await inquirer.prompt([{
     type: 'checkbox',
-    name: 'favoriteOps',
-    message: 'Which favorite operations would you like to DELETE?',
-    choices: favoriteOpsDb.map(op => ({
-      value: op.id,
-      name: `Nubank username ${op.username}`,
+    name: 'favoriteActsIds',
+    message: 'Which favorite actions would you like to run?',
+    choices: favoriteActsDb.map(act => ({
+      value: act.id,
+      checked: true,
+      name: `Nubank username ${act.username}`,
+    })),
+  }])
+  return favoriteActsDb.filter(act => favoriteActsIds.indexOf(act.id) !== -1)
+}
+
+async function askForFavoriteActsToDelete() {
+  const favoriteActsDb = db.get('favoriteActions').value()
+  const { favoriteActsIds } = await inquirer.prompt([{
+    type: 'checkbox',
+    name: 'favoriteActsIds',
+    message: 'Which favorite actions would you like to DELETE?',
+    choices: favoriteActsDb.map(act => ({
+      value: act.id,
+      name: `Nubank username ${act.username}`,
     })),
   }])
 
-  favoriteOps.forEach((id) => {
-    db.get('favoriteOperations')
+  favoriteActsIds.forEach((id) => {
+    db.get('favoriteActions')
       .remove({ id })
       .write()
   })
 }
 
-async function executeSync(operation) {
+async function executeAction(action) {
   try {
-    const transactions = await executeNubankFlow(operation)
-    await executeYnabFlow(transactions)
+    const { action: actionOut } =
+      await executeYnabFlow(await executeNubankFlow({ action }))
+
+    await askToSaveFavorite(actionOut)
   } catch (e) {
-    console.log()
+    console.log(chalk.red('##############'))
     console.log(chalk.red(e.toString()))
+    console.log(chalk.red('##############'))
   }
 }
 
-async function executeSyncArray(favoriteOps) {
+async function executeActionArray(favoriteActions) {
   let result = Promise.resolve()
-  favoriteOps.forEach((op) => {
-    result = result.then(() => executeSync(op))
+  favoriteActions.forEach((act) => {
+    result = result.then(() => executeAction(act))
   })
   return result
 }
 
-async function askForOperationType() {
-  const { operationType } = await inquirer.prompt([{
+async function askForActionType() {
+  const { actionType } = await inquirer.prompt([{
     type: 'list',
-    name: 'operationType',
+    name: 'actionType',
     message: 'What would you like to do?',
     choices: [
-      { value: 'FAVORITE', name: 'Use favorite operations' },
-      { value: 'NEW', name: 'Start a new operation' },
-      { value: 'DELETE', name: 'Delete favorite operations' },
+      { value: 'FAVORITE', name: 'Use favorite actions' },
+      { value: 'NEW', name: 'Start new action' },
+      { value: 'DELETE', name: 'Delete favorite actions' },
       { value: 'EXIT', name: 'Exit' },
     ],
   }])
-  return operationType
+  return actionType
 }
 
 async function main() {
@@ -77,20 +108,19 @@ async function main() {
     return
   }
 
-  const opType = await askForOperationType()
-  switch (opType) {
+  switch (await askForActionType()) {
     case 'NEW':
-      await executeSync()
+      await executeAction()
       main()
       break
 
     case 'FAVORITE':
-      await executeSyncArray(await askForFavoriteOpsToRun())
+      await executeActionArray(await askForFavoriteActsToRun())
       main()
       break
 
     case 'DELETE':
-      await askForFavoriteOpsToDelete()
+      await askForFavoriteActsToDelete()
       main()
       break
 
