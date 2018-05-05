@@ -9,7 +9,13 @@ async function askForNubankUsername() {
   const { username } = await inquirer.prompt([{
     type: 'string',
     name: 'username',
-    message: 'What is your Nubank username?',
+    message: 'Type in the Nubank username:',
+    validate: (answer) => {
+      if (!(/^[0-9]{11}$/.test(answer))) {
+        return 'That\'s an invalid username, try again'
+      }
+      return true
+    },
   }])
   return username
 }
@@ -19,6 +25,12 @@ async function askForNubankPassword(username) {
     type: 'password',
     name: 'password',
     message: `Please enter a password for Nubank username "${username}"`,
+    validate: (answer) => {
+      if (answer.length < 1) {
+        return 'You must type in the password, try again'
+      }
+      return true
+    },
   }])
   return password
 }
@@ -75,11 +87,10 @@ export default async function executeNubankFlow(operation) {
 
     NuBank.setLoginToken(record.token)
   } else {
-    await requestNewToken(db, username)
+    await requestNewToken(username)
   }
 
   const { events: transactions } = await NuBank.getWholeFeed()
-
   // const transactions = await askForFilterTransactions(transactions)
 
   return transactions
