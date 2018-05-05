@@ -23,7 +23,7 @@ async function askForNubankPassword(username) {
   return password
 }
 
-async function requestNewToken(db, username) {
+async function requestNewToken(username) {
   const password = await askForNubankPassword(username)
   const token = await NuBank.getLoginToken({ login: username, password })
 
@@ -48,8 +48,14 @@ async function requestNewToken(db, username) {
 //     return filteredTransactions
 // }
 
-export default async function executeNubankFlow() {
-  const username = await askForNubankUsername()
+export default async function executeNubankFlow(operation) {
+  let username;
+  if (operation) {
+    ({ username } = operation)
+    console.log(chalk.blue(`Nubank username ${username}`))
+  } else {
+    username = await askForNubankUsername()
+  }
 
   let record = db.get('nubankTokens')
     .find({ username })
@@ -69,7 +75,7 @@ export default async function executeNubankFlow() {
 
     NuBank.setLoginToken(record.token)
   } else {
-    requestNewToken(db, username)
+    await requestNewToken(db, username)
   }
 
   const { events: transactions } = await NuBank.getWholeFeed()

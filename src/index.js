@@ -13,11 +13,10 @@ async function askForFavoriteOpsToRun() {
     choices: favoriteOpsDb.map(op => ({
       value: op.id,
       checked: true,
-      name: op.name,
+      name: `Nubank username ${op.username}`,
     })),
   }])
-  console.log(chalk.green(`favOps ${favoriteOps}`))
-  return favoriteOps
+  return favoriteOpsDb.filter(op => favoriteOps.indexOf(op.id) !== -1)
 }
 
 async function askForFavoriteOpsToDelete() {
@@ -28,7 +27,7 @@ async function askForFavoriteOpsToDelete() {
     message: 'Which favorite operations would you like to DELETE?',
     choices: favoriteOpsDb.map(op => ({
       value: op.id,
-      name: op.name,
+      name: `Nubank username ${op.username}`,
     })),
   }])
 
@@ -39,13 +38,22 @@ async function askForFavoriteOpsToDelete() {
   })
 }
 
-async function executeSync() {
+async function executeSync(operation) {
   try {
-    const transactions = await executeNubankFlow()
+    const transactions = await executeNubankFlow(operation)
     await executeYnabFlow(transactions)
   } catch (e) {
+    console.log()
     console.log(chalk.red(e.toString()))
   }
+}
+
+async function executeSyncArray(favoriteOps) {
+  let result = Promise.resolve()
+  favoriteOps.forEach((op) => {
+    result = result.then(() => executeSync(op))
+  })
+  return result
 }
 
 async function askForOperationType() {
@@ -54,22 +62,10 @@ async function askForOperationType() {
     name: 'operationType',
     message: 'What would you like to do?',
     choices: [
-      {
-        value: 'NEW',
-        name: 'Start a new operation',
-      },
-      {
-        value: 'FAVORITE',
-        name: 'Use favorite operations',
-      },
-      {
-        value: 'DELETE',
-        name: 'Delete favorite operations',
-      },
-      {
-        value: 'EXIT',
-        name: 'Exit',
-      },
+      { value: 'FAVORITE', name: 'Use favorite operations' },
+      { value: 'NEW', name: 'Start a new operation' },
+      { value: 'DELETE', name: 'Delete favorite operations' },
+      { value: 'EXIT', name: 'Exit' },
     ],
   }])
   return operationType
@@ -81,30 +77,26 @@ async function main() {
     return
   }
 
-  let endWhile = false;
-  while (!endWhile) {
-    const opType = await askForOperationType()
-    switch (opType) {
-      case 'NEW':
-        await executeSync()
-        endWhile = true
-        break
+  const opType = await askForOperationType()
+  switch (opType) {
+    case 'NEW':
+      await executeSync()
+      main()
+      break
 
-      case 'FAVORITE':
-        await askForFavoriteOpsToRun()
-        endWhile = true
-        break
+    case 'FAVORITE':
+      await executeSyncArray(await askForFavoriteOpsToRun())
+      main()
+      break
 
-      case 'DELETE':
-        await askForFavoriteOpsToDelete()
-        break
+    case 'DELETE':
+      await askForFavoriteOpsToDelete()
+      main()
+      break
 
-      default:
-        endWhile = true
-        break
-    }
+    default:
+      break
   }
-
 }
 
 main()
