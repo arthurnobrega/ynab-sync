@@ -1,6 +1,5 @@
 import { API } from 'ynab'
 import inquirer from 'inquirer'
-import chalk from 'chalk'
 
 const ynabAPI = new API(process.env.YNAB_TOKEN)
 
@@ -18,15 +17,15 @@ async function getAccounts(budgetId) {
   return accounts
 }
 
-async function createTransaction(budgetId, transaction) {
-  let transactionResponse
+async function bulkCreateTransactions(budgetId, transactions) {
+  let response
   try {
-    transactionResponse = await ynabAPI.transactions.createTransaction(budgetId, transaction)
+    response = await ynabAPI.transactions.bulkCreateTransactions(budgetId, { transactions })
   } catch (e) {
-    console.log(chalk.red(e))
+    console.log(e)
   }
 
-  return transactionResponse
+  return response
 }
 
 async function askForBudget(budgets) {
@@ -36,7 +35,8 @@ async function askForBudget(budgets) {
     message: 'Which YNAB budget do you want to sync?',
     choices: budgets.map(b => ({ value: b.id, name: `${b.name} (${b.id})` })),
   }])
-  return budgets.filter(budget => budget.id === budgetId)[0]
+
+  return budgets.find(budget => budget.id === budgetId)
 }
 
 async function askForAccount(accounts) {
@@ -46,13 +46,25 @@ async function askForAccount(accounts) {
     message: 'Which YNAB account do you want to sync?',
     choices: accounts.map(a => ({ value: a.id, name: `${a.name} (${a.id})` })),
   }])
-  return accounts.filter(account => account.id === accountId)[0]
+
+  return accounts.find(account => account.id === accountId)
+}
+
+async function askForConfirm(transactions) {
+  const { confirm } = await inquirer.prompt([{
+    type: 'confirm',
+    name: 'confirm',
+    message: `Do you confirm importing ${transactions.length} transactions from Nubank to YNAB?`,
+    default: true,
+  }])
+  return confirm
 }
 
 export default async function executeYnabFlow({ action }) {
   // TODO: also include login/token to YNAB
   const { transient } = action
   let { budget, account } = action
+
   if (!(budget && account)) {
     const budgets = await getBudgets()
     budget = await askForBudget(budgets)
@@ -60,25 +72,35 @@ export default async function executeYnabFlow({ action }) {
     account = await askForAccount(accounts)
   }
 
-  // TODO: Remove this selection of only first transaction
-  const nubankTransaction = transient.transactions[0]
-  const transaction = {
-    account_id: account.id,
-    date: nubankTransaction.time,
-    amount: -(nubankTransaction.amount * 10),
-    memo: nubankTransaction.description,
-    cleared: 'cleared',
-    approved: true,
-    import_id: nubankTransaction.id,
+  const confirm = await askForConfirm(transient.transactions)
+
+  if (confirm) {
+    const parsedTransactions = transient.transactions
+      .map((nubankTransaction) => {
+        const amount = -1 * nubankTransaction.amount * 10
+
+        return {
+          amount,
+          approved: true,
+          cleared: 'cleared',
+          account_id: account.id,
+          date: nubankTransaction.post_date,
+          payee_name: nubankTransaction.title,
+          memo: nubankTransaction.title,
+          import_id: nubankTransaction.id,
+        }
+      })
+
+    await bulkCreateTransactions(budget.id, parsedTransactions)
+
+    return {
+      action: {
+        ...action,
+        budget,
+        account,
+      },
+    }
   }
 
-  await createTransaction(budget.id, { transaction })
-
-  return {
-    action: {
-      ...action,
-      budget,
-      account,
-    },
-  }
+  return null
 }

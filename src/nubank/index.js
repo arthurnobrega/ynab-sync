@@ -1,4 +1,4 @@
-import createNuBank from 'nubank-api'
+import createNuBank from 'nubank'
 import inquirer from 'inquirer'
 import chalk from 'chalk'
 import db from '../db'
@@ -48,17 +48,15 @@ async function requestNewToken(username) {
     .write()
 }
 
-// async function askForFilterTransactions(transactions) {
-//   const filteredTransactions = period
-//       ? transactions.filter(t => t.time.indexOf(period) !== -1)
-//       : transactions
+async function askForFilterTransactions() {
+  const { filter } = await inquirer.prompt([{
+    type: 'string',
+    name: 'filter',
+    message: 'If you want to filter transactions, type in the format YYYY-MM (ex: 2018-01), otherwise just press ENTER:',
+  }])
 
-//     if (verbose) {
-//       console.log(filteredTransactions)
-//     }
-
-//     return filteredTransactions
-// }
+  return filter
+}
 
 export default async function executeNubankFlow({ action = {} }) {
   let { username } = action
@@ -87,8 +85,10 @@ export default async function executeNubankFlow({ action = {} }) {
     await requestNewToken(username)
   }
 
-  const { events: transactions } = await NuBank.getWholeFeed()
-  // const transactions = await askForFilterTransactions(transactions)
+  const filter = await askForFilterTransactions()
+
+  const { bill } = await NuBank.getBillByMonth(filter)
+  const transactions = bill.line_items
 
   return {
     action: {
