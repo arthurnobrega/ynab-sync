@@ -9,7 +9,13 @@ async function askForNubankUsername() {
   const { username } = await inquirer.prompt([{
     type: 'string',
     name: 'username',
-    message: 'What is your Nubank username?',
+    message: 'Type in the Nubank username:',
+    validate: (answer) => {
+      if (!(/^[0-9]{11}$/.test(answer))) {
+        return 'That\'s an invalid username, try again'
+      }
+      return true
+    },
   }])
   return username
 }
@@ -19,11 +25,17 @@ async function askForNubankPassword(username) {
     type: 'password',
     name: 'password',
     message: `Please enter a password for Nubank username "${username}"`,
+    validate: (answer) => {
+      if (answer.length < 1) {
+        return 'You must type in the password, try again'
+      }
+      return true
+    },
   }])
   return password
 }
 
-async function requestNewToken(db, username) {
+async function requestNewToken(username) {
   const password = await askForNubankPassword(username)
   const token = await NuBank.getLoginToken({ login: username, password })
 
@@ -48,8 +60,11 @@ async function requestNewToken(db, username) {
 //     return filteredTransactions
 // }
 
-export default async function executeNubankFlow() {
-  const username = await askForNubankUsername()
+export default async function executeNubankFlow({ action = {} }) {
+  let { username } = action
+  if (!username) {
+    username = await askForNubankUsername()
+  }
 
   let record = db.get('nubankTokens')
     .find({ username })
@@ -69,12 +84,17 @@ export default async function executeNubankFlow() {
 
     NuBank.setLoginToken(record.token)
   } else {
-    requestNewToken(db, username)
+    await requestNewToken(username)
   }
 
   const { events: transactions } = await NuBank.getWholeFeed()
-
   // const transactions = await askForFilterTransactions(transactions)
 
-  return transactions
+  return {
+    action: {
+      ...action,
+      username,
+      transient: { transactions },
+    },
+  }
 }

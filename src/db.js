@@ -4,7 +4,10 @@ import FileSync from 'lowdb/adapters/FileSync'
 const adapter = new FileSync('db.json')
 const db = lowdb(adapter)
 
-db.defaults({ nubankTokens: [] })
+db.defaults({
+  nubankTokens: [],
+  favoriteActions: [],
+})
   .write()
 
 export default db
