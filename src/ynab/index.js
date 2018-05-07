@@ -28,23 +28,29 @@ async function bulkCreateTransactions(budgetId, transactions) {
   return response
 }
 
-async function askForBudget(budgets) {
+async function askForBudget(_budgets) {
+  const budgets = _budgets
   const { budgetId } = await inquirer.prompt([{
     type: 'list',
     name: 'budgetId',
     message: 'Which YNAB budget do you want to sync?',
-    choices: budgets.map(b => ({ value: b.id, name: `${b.name} (${b.id})` })),
+    choices: budgets
+      .sort((b1, b2) => b1.name < b2.name)
+      .map(b => ({ value: b.id, name: `${b.name} (${b.id})` })),
   }])
 
   return budgets.find(budget => budget.id === budgetId)
 }
 
-async function askForAccount(accounts) {
+async function askForAccount(_accounts) {
+  const accounts = _accounts
   const { accountId } = await inquirer.prompt([{
     type: 'list',
     name: 'accountId',
     message: 'Which YNAB account do you want to sync?',
-    choices: accounts.map(a => ({ value: a.id, name: `${a.name} (${a.id})` })),
+    choices: accounts
+      .sort((a1, a2) => a1.name < a2.name)
+      .map(a => ({ value: a.id, name: `${a.name} (${a.id})` })),
   }])
 
   return accounts.find(account => account.id === accountId)
