@@ -10,6 +10,10 @@ function describeAction(action) {
 }
 
 async function askToSaveFavorite(_action) {
+  if (!_action) {
+    return
+  }
+
   let save = true
   let action = _action
   if (!action.id) {
@@ -37,10 +41,10 @@ async function askToSaveFavorite(_action) {
   }
 }
 
-function actionsToChoices(actions, checked = true) {
+function actionsToChoices(_actions, checked = true) {
   const now = new Date()
   let dateSeparator
-
+  let actions = _actions
   return actions
     .sort((act1, act2) => act1.when <= act2.when)
     .reduce((accumulator, action) => {
