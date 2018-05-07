@@ -44,23 +44,23 @@ async function askToSaveFavorite(_action) {
 function actionsToChoices(_actions, checked = true) {
   const now = new Date()
   let dateSeparator
-  let actions = _actions
+  const actions = _actions
   return actions
     .sort((act1, act2) => act1.when <= act2.when)
-    .reduce((accumulator, action) => {
-      const result = [...accumulator]
+    .reduce((oldAcc, action) => {
+      const accumulator = [...oldAcc]
       const newDtSep = ` = ${distanceInWords(action.when, now)} ago = `
       if (!dateSeparator || dateSeparator.localeCompare(newDtSep) !== 0) {
         dateSeparator = newDtSep
-        result.push(new inquirer.Separator(dateSeparator))
+        accumulator.push(new inquirer.Separator(dateSeparator))
       }
-      result.push({
+      accumulator.push({
         value: action.id,
         checked,
         name: describeAction(action),
       })
 
-      return result
+      return accumulator
     }, [])
 }
 
