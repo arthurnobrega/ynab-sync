@@ -1,4 +1,5 @@
 import { API } from 'ynab'
+import { format } from 'date-fns'
 import inquirer from 'inquirer'
 
 const ynabAPI = new API(process.env.YNAB_TOKEN)
@@ -36,7 +37,7 @@ async function askForBudget(_budgets) {
     message: 'Which YNAB budget do you want to sync?',
     choices: budgets
       .sort((b1, b2) => b1.name < b2.name)
-      .map(b => ({ value: b.id, name: `${b.name} (${b.id})` })),
+      .map(b => ({ value: b.id, name: `${b.name}` })),
   }])
 
   return budgets.find(budget => budget.id === budgetId)
@@ -50,24 +51,27 @@ async function askForAccount(_accounts) {
     message: 'Which YNAB account do you want to sync?',
     choices: accounts
       .sort((a1, a2) => a1.name < a2.name)
-      .map(a => ({ value: a.id, name: `${a.name} (${a.id})` })),
+      .map(a => ({ value: a.id, name: `${a.name}` })),
   }])
 
   return accounts.find(account => account.id === accountId)
 }
 
-async function askForConfirm(transactions) {
+async function askForConfirm(action) {
+  const { username, account, budget } = action
+  const { transactions } = action.transient
   const { confirm } = await inquirer.prompt([{
     type: 'confirm',
     name: 'confirm',
-    message: `Do you confirm importing ${transactions.length} transactions from Nubank to YNAB?`,
+    message: `Do you confirm importing ${transactions.length} transactions from Nubank ${username} to YNAB ${account.name} (${budget.name})?`,
     default: true,
   }])
   return confirm
 }
 
-export default async function executeYnabFlow({ action }) {
+export default async function executeYnabFlow({ action: _action }) {
   // TODO: also include login/token to YNAB
+  let action = _action
   const { transient } = action
   let { budget, account } = action
 
@@ -76,11 +80,13 @@ export default async function executeYnabFlow({ action }) {
     budget = await askForBudget(budgets)
     const accounts = await getAccounts(budget.id)
     account = await askForAccount(accounts)
+    action = { ...action, budget, account }
   }
 
-  const confirm = await askForConfirm(transient.transactions)
+  const confirm = await askForConfirm(action)
 
   if (confirm) {
+    const syncDate = format(new Date(), 'YYYY-MM-DD HH:mm')
     const parsedTransactions = transient.transactions
       .map((nubankTransaction) => {
         const amount = -1 * nubankTransaction.amount * 10
@@ -92,20 +98,14 @@ export default async function executeYnabFlow({ action }) {
           account_id: account.id,
           date: nubankTransaction.post_date,
           payee_name: nubankTransaction.title,
-          memo: nubankTransaction.title,
+          memo: `Synced on ${syncDate}`,
           import_id: nubankTransaction.id,
         }
       })
 
     await bulkCreateTransactions(budget.id, parsedTransactions)
 
-    return {
-      action: {
-        ...action,
-        budget,
-        account,
-      },
-    }
+    return { action }
   }
 
   return null

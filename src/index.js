@@ -93,9 +93,8 @@ async function askForFavoriteActsToDelete() {
 
 async function executeAction(action) {
   try {
-    const { action: actionOut } =
+    const actionOut =
       await executeYnabFlow(await executeNubankFlow({ action }))
-
     await askToSaveFavorite(actionOut)
   } catch (e) {
     console.log(chalk.red('##############'))
