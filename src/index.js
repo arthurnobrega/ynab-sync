@@ -9,13 +9,14 @@ function describeAction(action) {
   return `Nubank ${action.username} => YNAB ${action.account.name} (${action.budget.name})`
 }
 
-async function askToSaveFavorite(_action) {
+async function askToSaveFavorite({ action: _action }) {
   if (!_action) {
     return
   }
 
+  const { transient, ...resto } = _action
   let save = true
-  let action = _action
+  let action = resto
   if (!action.id) {
     ({ save } = await inquirer.prompt([{
       type: 'confirm',
@@ -34,7 +35,6 @@ async function askToSaveFavorite(_action) {
     db.get('favoriteActions')
       .push({
         ...action,
-        transient: undefined,
         when: new Date().getTime(),
       })
       .write()
@@ -44,7 +44,7 @@ async function askToSaveFavorite(_action) {
 function actionsToChoices(_actions, checked = true) {
   const now = new Date()
   let dateSeparator
-  const actions = _actions
+  const actions = [..._actions]
   return actions
     .sort((act1, act2) => act1.when <= act2.when)
     .reduce((oldAcc, action) => {

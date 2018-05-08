@@ -36,7 +36,7 @@ async function askForBudget(_budgets) {
     name: 'budgetId',
     message: 'Which YNAB budget do you want to sync?',
     choices: budgets
-      .sort((b1, b2) => b1.name < b2.name)
+      .sort((b1, b2) => b1.name > b2.name)
       .map(b => ({ value: b.id, name: `${b.name}` })),
   }])
 
@@ -50,7 +50,7 @@ async function askForAccount(_accounts) {
     name: 'accountId',
     message: 'Which YNAB account do you want to sync?',
     choices: accounts
-      .sort((a1, a2) => a1.name < a2.name)
+      .sort((a1, a2) => a1.name > a2.name)
       .map(a => ({ value: a.id, name: `${a.name}` })),
   }])
 
@@ -58,12 +58,16 @@ async function askForAccount(_accounts) {
 }
 
 async function askForConfirm(action) {
-  const { username, account, budget } = action
-  const { transactions } = action.transient
+  const {
+    username,
+    account,
+    budget,
+    transient,
+  } = action
   const { confirm } = await inquirer.prompt([{
     type: 'confirm',
     name: 'confirm',
-    message: `Do you confirm importing ${transactions.length} transactions from Nubank ${username} to YNAB ${account.name} (${budget.name})?`,
+    message: `Do you confirm importing ${transient.transactions.length} transactions from Nubank ${username} to YNAB ${account.name} (${budget.name})?`,
     default: true,
   }])
   return confirm
@@ -71,7 +75,7 @@ async function askForConfirm(action) {
 
 export default async function executeYnabFlow({ action: _action }) {
   // TODO: also include login/token to YNAB
-  let action = _action
+  let action = { ..._action }
   const { transient } = action
   let { budget, account } = action
 
