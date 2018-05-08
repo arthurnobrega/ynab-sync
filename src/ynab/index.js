@@ -81,7 +81,7 @@ export default async function executeYnabFlow({ action }) {
 
         return {
           amount,
-          approved: true,
+          approved: false,
           cleared: 'cleared',
           account_id: account.id,
           date: nubankTransaction.post_date,
