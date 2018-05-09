@@ -6,7 +6,7 @@
   "author": "Arthur Nobrega",
   "license": "MIT",
   "scripts": {
-    "build": "babel --quiet src -d dist",
+    "build": "babel --quiet src -d dist --ignore **/*.test.js,__mocks__",
     "start": "yarn build && node dist/index.js",
     "test": "jest"
   },

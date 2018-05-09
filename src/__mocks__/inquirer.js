@@ -1,9 +1,20 @@
 import ynabBudgets from './data/ynabBudgets.json'
 import ynabAccounts from '../__mocks__/data/ynabAccounts.json'
+import savedActions from '../__mocks__/data/savedActions.json'
 
 export default {
   prompt: ([{ name }]) => {
     switch (name) {
+      // Main
+      case 'actionType':
+        return { actionType: 'NEW' }
+      case 'actionsToRun':
+        return { actionsToRun: [savedActions[0]] }
+      case 'actionsToDelete':
+        return { actionsToDelete: [savedActions[1]] }
+      case 'save':
+        return { save: true }
+
       // Nubank
       case 'username':
         return { username: '45678932158' }
@@ -24,4 +35,5 @@ export default {
         return null
     }
   },
+  Separator: () => '',
 }

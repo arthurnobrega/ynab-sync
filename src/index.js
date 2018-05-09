@@ -1,109 +1,45 @@
-import { distanceInWords } from 'date-fns'
 import chalk from 'chalk'
-import inquirer from 'inquirer'
 import executeYnabFlow from './ynab'
 import executeNubankFlow from './nubank'
 import db, { initializeDb } from './db'
+import { askForActionType, askForSavedActionsToRun, askToSaveAction, askForSavedActionsToDelete } from './questions'
 
 initializeDb()
 
-function describeAction(action) {
-  return `Nubank ${action.username} => YNAB ${action.account.name} (${action.budget.name})`
-}
+export async function executeAction(action) {
+  const { username, transactions } = await executeNubankFlow(action)
+  const ynabResponse = await executeYnabFlow({ ...action, username }, transactions)
 
-async function askToSaveFavorite({ action: _action }) {
-  if (!_action) {
-    return
+  if (!ynabResponse) {
+    return false
   }
 
-  const { transient, ...resto } = _action
-  let save = true
-  let action = resto
-  if (!action.id) {
-    ({ save } = await inquirer.prompt([{
-      type: 'confirm',
-      name: 'save',
-      message: 'Would you like to save this action as a favorite?',
-      default: true,
-    }]))
-    action = { ...action, id: new Date().getTime() }
-  } else {
+  let actionOut = ynabResponse
+
+  if (!actionOut.id) {
+    const save = await askToSaveAction()
+
+    if (!save) {
+      return false
+    }
+  }
+
+  if (actionOut.id) {
     db.get('favoriteActions')
       .remove({ id: action.id })
       .write()
+  } else {
+    actionOut = { ...actionOut, id: new Date().getTime() }
   }
 
-  if (save) {
-    db.get('favoriteActions')
-      .push({
-        ...action,
-        when: new Date().getTime(),
-      })
-      .write()
-  }
-}
+  db.get('favoriteActions')
+    .push({
+      ...actionOut,
+      when: new Date().getTime(),
+    })
+    .write()
 
-function actionsToChoices(_actions, checked = true) {
-  const now = new Date()
-  let dateSeparator
-  const actions = [..._actions]
-  return actions
-    .sort((act1, act2) => act1.when <= act2.when)
-    .reduce((oldAcc, action) => {
-      const accumulator = [...oldAcc]
-      const newDtSep = ` = ${distanceInWords(action.when, now)} ago = `
-      if (!dateSeparator || dateSeparator.localeCompare(newDtSep) !== 0) {
-        dateSeparator = newDtSep
-        accumulator.push(new inquirer.Separator(dateSeparator))
-      }
-      accumulator.push({
-        value: action.id,
-        checked,
-        name: describeAction(action),
-      })
-
-      return accumulator
-    }, [])
-}
-
-async function askForFavoriteActsToRun() {
-  const favoriteActsDb = db.get('favoriteActions').value()
-  const { favoriteActsIds } = await inquirer.prompt([{
-    type: 'checkbox',
-    name: 'favoriteActsIds',
-    message: 'Which favorite actions would you like to run?',
-    choices: actionsToChoices(favoriteActsDb),
-  }])
-  return favoriteActsDb.filter(act => favoriteActsIds.indexOf(act.id) !== -1)
-}
-
-async function askForFavoriteActsToDelete() {
-  const favoriteActsDb = db.get('favoriteActions').value()
-  const { favoriteActsIds } = await inquirer.prompt([{
-    type: 'checkbox',
-    name: 'favoriteActsIds',
-    message: 'Which favorite actions would you like to DELETE?',
-    choices: actionsToChoices(favoriteActsDb, false),
-  }])
-
-  favoriteActsIds.forEach((id) => {
-    db.get('favoriteActions')
-      .remove({ id })
-      .write()
-  })
-}
-
-async function executeAction(action) {
-  try {
-    const transactions = await executeNubankFlow(action)
-    const { action: actionOut } = await executeYnabFlow(action, transactions)
-
-    await askToSaveFavorite(actionOut)
-  } catch (e) {
-    console.log(chalk.red('##############'))
-    console.log(chalk.red(e.toString()))
-    console.log(chalk.red('##############'))
-  }
+  return true
 }
 
 async function executeActionArray(favoriteActions) {
@@ -114,46 +50,51 @@ async function executeActionArray(favoriteActions) {
   return result
 }
 
-async function askForActionType() {
-  const { actionType } = await inquirer.prompt([{
-    type: 'list',
-    name: 'actionType',
-    message: 'What would you like to do?',
-    choices: [
-      { value: 'FAVORITE', name: 'Use favorite actions' },
-      { value: 'NEW', name: 'Start new action' },
-      { value: 'DELETE', name: 'Delete favorite actions' },
-      { value: 'EXIT', name: 'Exit' },
-    ],
-  }])
-  return actionType
-}
-
-async function main() {
+async function main({ actionType }) {
   if (!process.env.YNAB_TOKEN) {
     console.log(chalk.red('You need to set YNAB_TOKEN environment variable. Please read the README.md.'))
-    return
+    return false
   }
 
-  switch (await askForActionType()) {
+  const savedActions = db
+    .get('favoriteActions')
+    .value()
+
+  const newActionType = actionType || await askForActionType()
+  switch (newActionType) {
     case 'NEW':
       await executeAction()
-      main()
+      main({})
       break
 
-    case 'FAVORITE':
-      await executeActionArray(await askForFavoriteActsToRun())
-      main()
+    case 'FAVORITE': {
+      const actions = await askForSavedActionsToRun(savedActions)
+      await executeActionArray(actions)
+      main({})
       break
+    }
 
-    case 'DELETE':
-      await askForFavoriteActsToDelete()
-      main()
+    case 'DELETE': {
+      const actions = await askForSavedActionsToDelete(savedActions)
+      actions.forEach((action) => {
+        db.get('favoriteActions')
+          .remove({ id: action.id })
+          .write()
+      })
+      main({})
       break
+    }
 
     default:
       break
   }
+
+  return true
 }
 
-main()
+export { main as default }
+
+// Run main if it was called by shell
+if (require.main === module) {
+  main({})
+}

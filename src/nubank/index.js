@@ -32,14 +32,17 @@ export default async function executeNubankFlow(action = {}) {
       .write()
   }
 
+
   const filter = await askForFilter()
   const { bill } = await getBillByMonth(filter)
 
-  return bill.line_items.map(transaction => ({
+  const transactions = bill.line_items.map(transaction => ({
     import_id: transaction.id,
     amount: -1 * transaction.amount * 10,
     date: transaction.post_date,
     payee_name: transaction.title,
     memo: transaction.title,
   }))
+
+  return { username, transactions }
 }
