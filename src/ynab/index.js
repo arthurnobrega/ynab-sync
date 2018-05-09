@@ -1,4 +1,3 @@
-import { format } from 'date-fns'
 import { askForBudget, askForAccount, askForConfirm } from './questions'
 import { getBudgets, getAccounts, importTransactions } from './middleware'
 
@@ -21,11 +20,8 @@ export default async function executeYnabFlow(_action, transactions) {
     return null
   }
 
-  const syncDate = format(new Date(), 'YYYY-MM-DD HH:mm')
-
   const parsedTransactions = transactions.map(nubankTransaction => ({
     ...nubankTransaction,
-    memo: `Synced on ${syncDate}`,
     approved: false,
     cleared: 'cleared',
     account_id: action.account.id,

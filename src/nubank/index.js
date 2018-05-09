@@ -21,7 +21,6 @@ export default async function executeNubankFlow(action = {}) {
 
   if (record) {
     console.log(chalk.blue(`Using valid NuBank token stored for username ${username}...`))
-
     setLoginToken(record.token)
   } else {
     const password = await askForPassword(username)
@@ -32,17 +31,18 @@ export default async function executeNubankFlow(action = {}) {
       .write()
   }
 
-
   const filter = await askForFilter()
   const { bill } = await getBillByMonth(filter)
 
-  const transactions = bill.line_items.map(transaction => ({
-    import_id: transaction.id,
-    amount: -1 * transaction.amount * 10,
-    date: transaction.post_date,
-    payee_name: transaction.title,
-    memo: transaction.title,
-  }))
+  const transactions = bill.line_items.map((transaction) => {
+    const { index, charges, title } = transaction
+    return {
+      import_id: transaction.id,
+      amount: -1 * transaction.amount * 10,
+      date: transaction.post_date,
+      memo: charges !== 1 ? `${title}, ${index + 1}/${charges}` : title,
+    }
+  })
 
   return { username, transactions }
 }
