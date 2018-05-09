@@ -1,0 +1,74 @@
+{
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ajIwMTUtMTItMDRUMT56MzY6MjIuNjY0LXU5ZC1ldWN1Ri1zQUFBRlJiaER3aUEifQ.eyJpc3MiOiJodHRwczpcL1wvd3d3Lm51YmFuay5jb20uYnIiLCJhdWQiOiJvdGhlci5jb250YSIsInN1YiI6IjU1NzgzZDZhLTlmZjItNDgyNC05MjRkLWZkM2M3YzI1N2QwOCIsImV4cCI6MTUyNjAxNjYyMCwic2NvcGUiOiJhdXRoXC91c2VyIHVzZXIiLCJtdGxzIjpmYWxzZSwidmVyc2lvbiI6IjIiLCJpYXQiOjE1MjU0MTE4MjAsImp0aSI6ImJIUXZEOU9iSUY0QUFBRmpLYUUwSkEiff.Y9f8BW8d4lUTqLr3GQoPJmMSuP5G3czXg7cyodBkseBoL7-ptuI-pK86I7iwKmZIV-Is6U9ExSWNnWZWLGnA23kvpgTfrQQALCS9T6LwKLxE2U9SvOhyTaPV8ET-qP-zYEapnV8OQkNnDnaZ5rngZ17hNUMXgmVgRNFCkTRviInqHRO42n4BGkqMy-bcXMtvhAr-bcxlAn85FQe1L7Rn6cQmLbK_6HpusPtpFYHDsMIETW7yowPdiFKJBR4JQFUJLsDSpCK04tqR8Mf4_Bzlh_2CM07G9UKSHT4dsan-Mnh_LvxAhZEQmN0LN7aIg2WjRHykxwRcrcjn3HTRcmc7yt",
+  "token_type": "bearer",
+  "_links": {
+    "change_password": {
+      "href": "https://prod-global-auth.nubank.com.br/api/change-password"
+    },
+    "enabled_features": {
+      "href": "https://prod-s0-facade.nubank.com.br/api/customers/55783d6a-9ff2-4824-624d-5d3c7d257d05/rollout"
+    },
+    "revoke_token": {
+      "href": "https://prod-global-auth.nubank.com.br/api/revoke"
+    },
+    "userinfo": {
+      "href": "https://prod-global-auth.nubank.com.br/api/userinfo"
+    },
+    "events_page": {
+      "href": "https://prod-s0-facade.nubank.com.br/api/customers/55783d6a-9ff2-4824-624d-5d3c7d257d05/feed?days=90"
+    },
+    "dropman": {
+      "href": "https://prod-s0-mancini.nubank.com.br/api/query"
+    },
+    "events": {
+      "href": "https://prod-s0-facade.nubank.com.br/api/customers/55783d6a-9ff2-4824-624d-5d3c7d257d05/feed"
+    },
+    "faq_push_back_state": {
+      "href": "https://prod-global-crm-client.nubank.com.br/api/contact/push-back-state"
+    },
+    "postcode": {
+      "href": "https://prod-s0-geo.nubank.com.br/api/postcodes/br/{postcode}"
+    },
+    "app_flows": {
+      "href": "https://prod-s0-facade.nubank.com.br/api/customers/55783d6a-9ff2-4824-624d-5d3c7d257d05/app/flows"
+    },
+    "revoke_all": {
+      "href": "https://prod-global-auth.nubank.com.br/api/revoke/all"
+    },
+    "customer": {
+      "href": "https://prod-s0-customers.nubank.com.br/api/customers/55783d6a-9ff2-4824-624d-5d3c7d257d05"
+    },
+    "account": {
+      "href": "https://prod-s0-credit-card-accounts.nubank.com.br/api/accounts/5578a992-1e77-4548-a681-87916adb8129"
+    },
+    "bills_summary": {
+      "href": "https://prod-s0-billing.nubank.com.br/api/accounts/5578a992-1e77-4548-a681-87916adb8129/bills/summary"
+    },
+    "features_map": {
+      "href": "https://prod-s0-facade.nubank.com.br/api/customers/55783d6a-9ff2-4824-624d-5d3c7d257d05/rollout-map"
+    },
+    "healthcheck": {
+      "href": "https://prod-global-auth.nubank.com.br/api/healthcheck-device"
+    },
+    "savings_account": {
+      "href": "https://prod-s0-stormshield.nubank.com.br/api/query"
+    },
+    "purchases": {
+      "href": "https://prod-s0-feed.nubank.com.br/api/accounts/5578a992-1e77-4548-a681-87916adb8129/transactions"
+    },
+    "ghostflame": {
+      "href": "https://prod-s0-stormshield.nubank.com.br/api/query"
+    },
+    "account_simple": {
+      "href": "https://prod-s0-credit-card-accounts.nubank.com.br/api/accounts/5578a992-1e77-4548-a681-87916adb8129/simple"
+    },
+    "shore": {
+      "href": "https://prod-s0-shore.nubank.com.br/api/query"
+    },
+    "user_change_password": {
+      "href": "https://prod-global-auth.nubank.com.br/api/user/55783d6a-9ff2-4824-624d-5d3c7d257d05/password"
+    }
+  },
+  "refresh_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6Ikl7VCIsImtpZCI6IjIwMTUtMTItMDRUMTc6MzY6MjIuNjY0LXU5ZC1ldWN1Ri1zQ4pBRdJiaEh3aUEifQ.eyJpc3MiOiJodHRwczpcL1wvd3d3Lm51YmFuay5jb20uYnIiLCJhdWQiOiJvdGhlci5jb250YSIsInN1YiI6IjU1NzgzZDZhLTlmZjItNDgyNC05MjRkLWZkM2M3YzI1N2QwOCIsImV4cCI6MTUyODAwMzgyMCwic2NvcGUiOiJhdXRoXC9yZWZyZXNoIiwibXRscyI6ZmFsc2UsInZlcnNpb24iOiIyIiwiaWF0IjoxNTI1NDExODIwLCJqdGkiOiJHa2Y3ckk3MnFiWUFBQUZqS2FFMEhnIn0.PkLmOpY95XCQMtHH2Xg7Pds5PD7rhLuGOrEXAEnZt7V948CVzTWYbUHkV8mWxvGYDK12E3CW7qrMm1L7yxGasn5PsUvRrlfwP0eEJ6RzZrKoK5BOgTwtyP8alpus9Djkk8YgFzf2IpLPE2_R5mLfyQaT-bCqiAbG4HnP27Mkg8jE0WZ-mAixZYmxNdNsv0e1-CXdksrhySPYZ0iSTk4MryOZSGT8TXBkPcsborFdGztjrwty-KDS6Uqyh1UgMHwX7M0KS6ja4xQzXcvi0yC3JyAgffWqCKIEHvbigVhfUevtioWAjYKW09y-qUqKwfe4nA6UykUWrYEgCGCo5W8Qv4",
+  "refresh_before": "2018-05-11T05:30:20Z"
+}

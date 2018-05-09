@@ -3,7 +3,9 @@ import chalk from 'chalk'
 import inquirer from 'inquirer'
 import executeYnabFlow from './ynab'
 import executeNubankFlow from './nubank'
-import db from './db'
+import db, { initializeDb } from './db'
+
+initializeDb()
 
 function describeAction(action) {
   return `Nubank ${action.username} => YNAB ${action.account.name} (${action.budget.name})`
@@ -93,8 +95,9 @@ async function askForFavoriteActsToDelete() {
 
 async function executeAction(action) {
   try {
-    const actionOut =
-      await executeYnabFlow(await executeNubankFlow({ action }))
+    const transactions = await executeNubankFlow(action)
+    const { action: actionOut } = await executeYnabFlow(action, transactions)
+
     await askToSaveFavorite(actionOut)
   } catch (e) {
     console.log(chalk.red('##############'))

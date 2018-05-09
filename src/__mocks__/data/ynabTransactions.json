@@ -1,0 +1,60 @@
+{
+    "data" : {
+       "transactions": [
+            {
+                "id": "d2rp90c9-d732-4ce3-xfe3-274afb6bf0fb",
+                "date": "2018-04-01",
+                "amount": -1684350,
+                "memo": null,
+                "cleared": "reconciled",
+                "approved": true,
+                "flag_color": null,
+                "account_id": "8a9680f0-1393-45d0-86d0-85c9ccb82e66",
+                "account_name": "Nubank",
+                "payee_id": "7446eadc-03e8-45d1-8c7b-fb60027af60f",
+                "payee_name": "Starting Balance",
+                "category_id": "6fb41e60-4695-4315-94dc-e5dd1766dc35",
+                "category_name": "Immediate Income SubCategory",
+                "transfer_account_id": null,
+                "import_id": null,
+                "subtransactions": []
+            },
+            {
+                "id": "3577563c-abfb-4d04-81cb-649464300608",
+                "date": "2018-04-01",
+                "amount": -9980,
+                "memo": "Restaurante X",
+                "cleared": "reconciled",
+                "approved": true,
+                "flag_color": null,
+                "account_id": "8a9680f0-1393-45d0-86d0-85c9ccb82e66",
+                "account_name": "Nubank",
+                "payee_id": "31afe546-f9c8-4bf2-b9cd-29a332a60275",
+                "payee_name": "Icasei Presen",
+                "category_id": "da56425d-897e-4d29-9730-e8c5e453fb03",
+                "category_name": "Restaurante",
+                "transfer_account_id": null,
+                "import_id": "5ab0a506-082f-48a6-9c5e-29aa7a50300f",
+                "subtransactions": []
+            },
+            {
+                "id": "af9baf34-fcb7-40e0-9333-f2b97ad52057",
+                "date": "2018-04-01",
+                "amount": 1000,
+                "memo": null,
+                "cleared": "reconciled",
+                "approved": true,
+                "flag_color": null,
+                "account_id": "9235b012-d26f-42e5-sc9r-9acfac3be0e4",
+                "account_name": "Carteira",
+                "payee_id": "7446eadc-03e8-45d1-8c7b-fb60027af60f",
+                "payee_name": "Starting Balance",
+                "category_id": "6fb41e60-4695-4315-94dc-e5dd1766dc35",
+                "category_name": "Immediate Income SubCategory",
+                "transfer_account_id": null,
+                "import_id": null,
+                "subtransactions": []
+            }
+        ]
+    }
+}

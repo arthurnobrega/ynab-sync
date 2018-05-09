@@ -1,0 +1,39 @@
+{
+    "data" : {
+       "accounts": [
+            {
+                "id": "8a9680f0-1393-45d0-86d0-85c9ccb82e66",
+                "name": "Nubank",
+                "type": "creditCard",
+                "on_budget": true,
+                "closed": false,
+                "note": null,
+                "balance": 106270,
+                "cleared_balance": 106270,
+                "uncleared_balance": 0
+            },
+            {
+                "id": "698d9a6c-78d2-4a69-9765-42555b682840",
+                "name": "Conta Corrente BB",
+                "type": "checking",
+                "on_budget": true,
+                "closed": false,
+                "note": null,
+                "balance": 269230,
+                "cleared_balance": 269230,
+                "uncleared_balance": 0
+            },
+            {
+                "id": "9235b012-d26f-42e5-sc9r-9acfac3be0e4",
+                "name": "Carteira",
+                "type": "cash",
+                "on_budget": true,
+                "closed": false,
+                "note": null,
+                "balance": 615330,
+                "cleared_balance": 615330,
+                "uncleared_balance": 0
+            }
+        ]
+    }
+}

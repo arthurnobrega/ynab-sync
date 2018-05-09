@@ -1,68 +1,10 @@
-import createNuBank from 'nubank'
-import inquirer from 'inquirer'
 import chalk from 'chalk'
 import db from '../db'
+import { askForPassword, askForUsername, askForFilter } from './questions'
+import { setLoginToken, requestNewToken, getBillByMonth } from './middleware'
 
-const NuBank = createNuBank()
-
-async function askForNubankUsername() {
-  const { username } = await inquirer.prompt([{
-    type: 'string',
-    name: 'username',
-    message: 'Type in the Nubank username:',
-    validate: (answer) => {
-      if (!(/^[0-9]{11}$/.test(answer))) {
-        return 'That\'s an invalid username, try again'
-      }
-      return true
-    },
-  }])
-  return username
-}
-
-async function askForNubankPassword(username) {
-  const { password } = await inquirer.prompt([{
-    type: 'password',
-    name: 'password',
-    message: `Please enter a password for Nubank username "${username}"`,
-    validate: (answer) => {
-      if (answer.length < 1) {
-        return 'You must type in the password, try again'
-      }
-      return true
-    },
-  }])
-  return password
-}
-
-async function requestNewToken(username) {
-  const password = await askForNubankPassword(username)
-  const token = await NuBank.getLoginToken({ login: username, password })
-
-  if (token.error) {
-    throw Error(token.error)
-  }
-
-  db.get('nubankTokens')
-    .push({ username, token })
-    .write()
-}
-
-async function askForFilterTransactions() {
-  const { filter } = await inquirer.prompt([{
-    type: 'string',
-    name: 'filter',
-    message: 'If you want to filter transactions, type in the format YYYY-MM (ex: 2018-01), otherwise just press ENTER:',
-  }])
-
-  return filter
-}
-
-export default async function executeNubankFlow({ action = {} }) {
-  let { username } = action
-  if (!username) {
-    username = await askForNubankUsername()
-  }
+export default async function executeNubankFlow(action = {}) {
+  const username = action.username || await askForUsername()
 
   let record = db.get('nubankTokens')
     .find({ username })
@@ -80,21 +22,24 @@ export default async function executeNubankFlow({ action = {} }) {
   if (record) {
     console.log(chalk.blue(`Using valid NuBank token stored for username ${username}...`))
 
-    NuBank.setLoginToken(record.token)
+    setLoginToken(record.token)
   } else {
-    await requestNewToken(username)
+    const password = await askForPassword(username)
+    const token = await requestNewToken(username, password)
+
+    db.get('nubankTokens')
+      .push({ username, token })
+      .write()
   }
 
-  const filter = await askForFilterTransactions()
+  const filter = await askForFilter()
+  const { bill } = await getBillByMonth(filter)
 
-  const { bill } = await NuBank.getBillByMonth(filter)
-  const transactions = bill.line_items
-
-  return {
-    action: {
-      ...action,
-      username,
-      transient: { transactions },
-    },
-  }
+  return bill.line_items.map(transaction => ({
+    import_id: transaction.id,
+    amount: -1 * transaction.amount * 10,
+    date: transaction.post_date,
+    payee_name: transaction.title,
+    memo: transaction.title,
+  }))
 }

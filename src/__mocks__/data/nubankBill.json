@@ -1,0 +1,74 @@
+{
+  "bill": {
+    "payment_method": "boleto",
+    "barcode": "",
+    "account_id": "5558i992-1f97-4831-a851-87156oeb8129",
+    "auto_debit_failed": false,
+    "state": "overdue",
+    "linha_digitavel": "",
+    "summary": {
+        "payments": "-1684.35",
+        "interest_charge": "0",
+        "total_international": "183.122532",
+        "due_date": "2018-05-08",
+        "precise_minimum_payment": "553.3814646600",
+        "interest_reversal": "0",
+        "close_date": "2018-05-01",
+        "late_interest_rate": "0.0375",
+        "expenses": "3678.24",
+        "total_credits": "0",
+        "past_balance": 0,
+        "late_fee": "0.02",
+        "effective_due_date": "2018-05-08",
+        "international_tax": "10.982532",
+        "tax": "0",
+        "adjustments": "0",
+        "precise_total_balance": "3689.22061686",
+        "total_financed": "0",
+        "total_balance": 368922,
+        "interest_rate": "0.0275",
+        "total_national": "3506.100000",
+        "previous_bill_balance": "1684.34808486",
+        "interest": 0,
+        "total_cumulative": 368922,
+        "paid": 368922,
+        "fees": "0",
+        "total_payments": "-1684.35",
+        "minimum_payment": 55338,
+        "open_date": "2018-04-01",
+        "total_accrued": "0"
+    },
+    "line_items": [
+      {
+        "post_date": "2018-04-01",
+        "amount": 998,
+        "title": "Subway",
+        "index": 1,
+        "charges": 6,
+        "category": "Restaurante",
+        "id": "5ab0a506-082f-48a6-9d5e-29aa7a50300x",
+        "href": "nuapp://transaction/5aaee65f-2d9e-4b81-98ab-8xf92d24e8e2"
+      },
+      {
+        "post_date": "2018-04-02",
+        "amount": 7367,
+        "title": "Iugu*Contabilivre",
+        "index": 0,
+        "charges": 1,
+        "category": "Serviços",
+        "id": "5ac0b100-3172-4511-b2bd-cee95c316d9x",
+        "href": "nuapp://transaction/5ac0b101-6ceb-4d6f-af2a-2x4c3ee6afe2"
+      },
+      {
+        "post_date": "2018-04-02",
+        "amount": 11400,
+        "title": "Ricco Burguer Comerc",
+        "index": 0,
+        "charges": 1,
+        "category": "Restaurante",
+        "id": "5ac01e1e-6585-4381-897f-d9e9b1d7186x",
+        "href": "nuapp://transaction/5ac01e1e-7e3e-49a8-baaf-exda5c495bcf"
+      }
+    ]
+  }
+}
