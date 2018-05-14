@@ -38,7 +38,7 @@ export default async function executeNubankFlow(action = {}) {
     const { index, charges, title } = transaction
     return {
       import_id: transaction.id,
-      amount: -1 * transaction.amount * 10,
+      amount: parseInt(-1 * transaction.amount * 10, 10),
       date: transaction.post_date,
       memo: charges !== 1 ? `${title}, ${index + 1}/${charges}` : title,
     }

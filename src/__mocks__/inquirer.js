@@ -1,11 +1,13 @@
 import ynabBudgets from './data/ynabBudgets.json'
-import ynabAccounts from '../__mocks__/data/ynabAccounts.json'
-import savedActions from '../__mocks__/data/savedActions.json'
+import ynabAccounts from './data/ynabAccounts.json'
+import savedActions from './data/savedActions.json'
 
 export default {
   prompt: ([{ name }]) => {
     switch (name) {
       // Main
+      case 'flowType':
+        return { flowType: 'nubank' }
       case 'actionType':
         return { actionType: 'NEW' }
       case 'actionsToRun':
@@ -14,6 +16,16 @@ export default {
         return { actionsToDelete: [savedActions[1]] }
       case 'save':
         return { save: true }
+
+      // BB
+      case 'bbBranch':
+        return { bbBranch: '12345' }
+      case 'bbAccount':
+        return { bbAccount: '123456' }
+      case 'bbPassword':
+        return { bbPassword: '12345678' }
+      case 'bbFilter':
+        return { bbFilter: '2018-01' }
 
       // Nubank
       case 'username':

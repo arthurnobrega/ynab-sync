@@ -16,6 +16,7 @@ class LowdbMock {
   write() { return this }
   remove() { return this }
   find() { return this }
+  filter() { return this }
   sortBy() { return this }
   take() { return this }
   map() { return this }

@@ -1,7 +1,13 @@
-import { askForActionType, askForSavedActionsToRun, askToSaveAction, askForSavedActionsToDelete } from './questions'
+import { askForFlowType, askForActionType, askForSavedActionsToRun, askToSaveAction, askForSavedActionsToDelete } from './questions'
 import savedActions from './__mocks__/data/savedActions.json'
 
 describe('Main questions', () => {
+  it('should select nubank flow type', async () => {
+    const type = await askForFlowType()
+
+    expect(type).toBe('nubank')
+  })
+
   it('should return action type NEW', async () => {
     const actionType = await askForActionType()
 

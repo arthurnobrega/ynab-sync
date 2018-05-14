@@ -1,7 +1,7 @@
 import { askForBudget, askForAccount, askForConfirm } from './questions'
 import { getBudgets, getAccounts, importTransactions } from './middleware'
 
-export default async function executeYnabFlow(_action, transactions) {
+export default async function executeYnabFlow(flow, _action, transactions) {
   // TODO: also include login/token to YNAB
   let action = { ..._action }
 
@@ -14,20 +14,25 @@ export default async function executeYnabFlow(_action, transactions) {
     action = { ..._action, budget, account }
   }
 
-  const confirm = await askForConfirm(action, transactions)
+  const confirm = await askForConfirm(flow, action, transactions)
 
   if (!confirm) {
     return null
   }
 
-  const parsedTransactions = transactions.map(nubankTransaction => ({
-    ...nubankTransaction,
+  const parsedTransactions = transactions.map(transaction => ({
+    ...transaction,
     approved: false,
     cleared: 'cleared',
     account_id: action.account.id,
   }))
 
-  await importTransactions(action.budget.id, parsedTransactions)
+  try {
+    await importTransactions(action.budget.id, parsedTransactions)
+  } catch (e) {
+    console.log(e)
+    return null
+  }
 
   return action
 }

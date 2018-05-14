@@ -24,7 +24,7 @@ describe('YNAB questions', () => {
     const budget = await askForBudget(budgets.data.budgets)
     const account = await askForAccount(accounts.data.accounts)
 
-    const confirm = await askForConfirm({ account, budget }, transactions.data.transactions)
+    const confirm = await askForConfirm({ type: 'nubank' }, { account, budget }, transactions.data.transactions)
 
     expect(confirm).toBeTruthy()
   })

@@ -1032,6 +1032,12 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
+bb-api@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/bb-api/-/bb-api-1.0.4.tgz#cc7722de0081170b56b8702257bdcbb4f7a037b9"
+  dependencies:
+    node-fetch "^2.1.2"
+
 bcrypt-pbkdf@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.1.tgz#63bc5dcb61331b92bc05fd528953c33462a06f8d"

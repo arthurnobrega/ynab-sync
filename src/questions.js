@@ -1,6 +1,20 @@
 import inquirer from 'inquirer'
 import { distanceInWords } from 'date-fns'
 
+export async function askForFlowType() {
+  const { flowType } = await inquirer.prompt([{
+    type: 'list',
+    name: 'flowType',
+    message: 'Select an integration type:',
+    choices: [
+      { value: 'nubank', name: 'Nubank' },
+      { value: 'bb', name: 'Banco do Brasil' },
+    ],
+  }])
+
+  return flowType
+}
+
 export async function askForActionType() {
   const { actionType } = await inquirer.prompt([{
     type: 'list',

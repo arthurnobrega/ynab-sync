@@ -1,6 +1,6 @@
 {
   "name": "ynab-sync-nubank",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Create OFX from NuBank transactions",
   "main": "index.js",
   "author": "Arthur Nobrega",
@@ -10,6 +10,10 @@
     "start": "yarn build && node dist/index.js",
     "test": "jest"
   },
+  "engines": {
+    "node": "8.11.1",
+    "npm": "5.6.0"
+  },
   "jest": {
     "testPathIgnorePatterns": [
       "node_modules",
@@ -17,6 +21,7 @@
     ]
   },
   "dependencies": {
+    "bb-api": "^1.0.4",
     "chalk": "^2.4.1",
     "date-fns": "^1.29.0",
     "inquirer": "^5.2.0",
