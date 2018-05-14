@@ -31,11 +31,19 @@ export async function askForActionType() {
   return actionType
 }
 
-function describeAction(action) {
-  return `Nubank ${action.username} => YNAB ${action.account.name} (${action.budget.name})`
+function describeAction(flow, action) {
+  let usernameText
+
+  if (typeof action.username === 'object') {
+    usernameText = Object.values(action.username).join(' / ')
+  } else {
+    usernameText = action.username
+  }
+
+  return `${flow.name} ${usernameText} => YNAB ${action.account.name} (${action.budget.name})`
 }
 
-function actionsToChoices(actions, checked = true) {
+function actionsToChoices(flow, actions, checked = true) {
   const now = new Date()
   let dateSeparator
 
@@ -52,30 +60,30 @@ function actionsToChoices(actions, checked = true) {
       accumulator.push({
         value: action,
         checked,
-        name: describeAction(action),
+        name: describeAction(flow, action),
       })
 
       return accumulator
     }, [])
 }
 
-export async function askForSavedActionsToRun(savedActions) {
+export async function askForSavedActionsToRun(flow, savedActions) {
   const { actionsToRun } = await inquirer.prompt([{
     type: 'checkbox',
     name: 'actionsToRun',
     message: 'Which favorite actions would you like to run?',
-    choices: actionsToChoices(savedActions),
+    choices: actionsToChoices(flow, savedActions),
   }])
 
   return actionsToRun
 }
 
-export async function askForSavedActionsToDelete(savedActions) {
+export async function askForSavedActionsToDelete(flow, savedActions) {
   const { actionsToDelete } = await inquirer.prompt([{
     type: 'checkbox',
     name: 'actionsToDelete',
     message: 'Which favorite actions would you like to DELETE?',
-    choices: actionsToChoices(savedActions, false),
+    choices: actionsToChoices(flow, savedActions, false),
   }])
 
   return actionsToDelete

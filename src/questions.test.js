@@ -1,5 +1,6 @@
 import { askForFlowType, askForActionType, askForSavedActionsToRun, askToSaveAction, askForSavedActionsToDelete } from './questions'
 import savedActions from './__mocks__/data/savedActions.json'
+import { flows } from '.'
 
 describe('Main questions', () => {
   it('should select nubank flow type', async () => {
@@ -15,7 +16,7 @@ describe('Main questions', () => {
   })
 
   it('should return one saved action', async () => {
-    const actions = await askForSavedActionsToRun(savedActions)
+    const actions = await askForSavedActionsToRun(flows[0], savedActions)
 
     expect(actions.length).toEqual(1)
     expect(actions[0]).toEqual(savedActions[0])
@@ -27,7 +28,7 @@ describe('Main questions', () => {
   })
 
   it('should return the second action to remove', async () => {
-    const actions = await askForSavedActionsToDelete(savedActions)
+    const actions = await askForSavedActionsToDelete(flows[0], savedActions)
 
     expect(actions.length).toEqual(1)
     expect(actions[0]).toEqual(savedActions[1])

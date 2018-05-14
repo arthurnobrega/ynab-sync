@@ -1,4 +1,5 @@
 import BB from 'bb-api'
+import md5 from 'md5'
 import { askForUsername, askForPassword, askForFilter } from './questions'
 
 const bb = new BB()
@@ -14,11 +15,14 @@ export default async function executeBBFlow(action = {}) {
   const response = await bb.getTransactions({ year: filterParts[0], month: filterParts[1] })
 
   const transactions = response.map((transaction) => {
-    const { description: memo, date, amount } = transaction
+    const { description: memo, date, amount: sourceAmount } = transaction
+    const amount = parseInt(sourceAmount * 1000, 10)
+
     return {
       date,
       memo,
-      amount: parseInt(-1 * amount * 100, 10),
+      amount,
+      import_id: md5(JSON.stringify({ date, memo, amount })),
     }
   })
 

@@ -7,7 +7,7 @@ import { askForFlowType, askForActionType, askForSavedActionsToRun, askToSaveAct
 
 initializeDb()
 
-const flows = [
+export const flows = [
   {
     type: 'nubank',
     name: 'Nubank',
@@ -20,8 +20,7 @@ const flows = [
   },
 ]
 
-export async function executeAction(flowType, action) {
-  const flow = flows.find(f => f.type === flowType)
+export async function executeAction(flow, action) {
   const { username, transactions } = await flow.execute(action)
 
   const ynabResponse = await executeYnabFlow(flow, { ...action, username }, transactions)
@@ -42,7 +41,7 @@ export async function executeAction(flowType, action) {
 
   if (actionOut.id) {
     db.get('favoriteActions')
-      .remove({ flowType, id: action.id })
+      .remove({ flowType: flow.type, id: action.id })
       .write()
   } else {
     actionOut = { ...actionOut, id: new Date().getTime() }
@@ -50,7 +49,7 @@ export async function executeAction(flowType, action) {
 
   db.get('favoriteActions')
     .push({
-      flowType,
+      flowType: flow.type,
       ...actionOut,
       when: new Date().getTime(),
     })
@@ -59,10 +58,10 @@ export async function executeAction(flowType, action) {
   return true
 }
 
-async function executeActionArray(flowType, favoriteActions) {
+async function executeActionArray(flow, favoriteActions) {
   let result = Promise.resolve()
   favoriteActions.forEach((act) => {
-    result = result.then(() => executeAction(flowType, act))
+    result = result.then(() => executeAction(flow, act))
   })
   return result
 }
@@ -74,6 +73,7 @@ async function main(action = {}) {
   }
 
   const flowType = await askForFlowType()
+  const flow = flows.find(f => f.type === flowType)
 
   const savedActions = db
     .get('favoriteActions')
@@ -83,19 +83,19 @@ async function main(action = {}) {
   const newActionType = action.actionType || await askForActionType()
   switch (newActionType) {
     case 'NEW':
-      await executeAction(flowType)
+      await executeAction(flow)
       main()
       break
 
     case 'FAVORITE': {
-      const actions = await askForSavedActionsToRun(savedActions)
-      await executeActionArray(flowType, actions)
+      const actions = await askForSavedActionsToRun(flow, savedActions)
+      await executeActionArray(flow, actions)
       main()
       break
     }
 
     case 'DELETE': {
-      const actions = await askForSavedActionsToDelete(savedActions)
+      const actions = await askForSavedActionsToDelete(flow, savedActions)
       actions.forEach((favoriteAction) => {
         db.get('favoriteActions')
           .remove({ flowType, id: favoriteAction.id })
