@@ -19,7 +19,7 @@ export async function askForUsername() {
     name: 'bbAccount',
     message: 'Type in your BB account number:',
     validate: (answer) => {
-      if (!(/^[0-9]{6}$/.test(answer))) {
+      if (!(/^[0-9]{7}$/.test(answer))) {
         return 'That\'s an invalid account number, try again'
       }
       return true

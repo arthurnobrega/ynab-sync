@@ -26,7 +26,7 @@ export async function askForAccount(accounts) {
   return account
 }
 
-export async function askForConfirm(flow, action, transactions) {
+export async function askForConfirm(action, transactions) {
   const { username, account, budget } = action
 
   let usernameText
@@ -39,7 +39,7 @@ export async function askForConfirm(flow, action, transactions) {
   const { confirm } = await inquirer.prompt([{
     type: 'confirm',
     name: 'confirm',
-    message: `Do you confirm importing ${transactions.length} transactions from ${flow.name} ${usernameText} to YNAB ${account.name} (${budget.name})?`,
+    message: `Do you confirm importing ${transactions.length} transactions from ${action.flowType.name} ${usernameText} to YNAB ${account.name} (${budget.name})?`,
     default: true,
   }])
 

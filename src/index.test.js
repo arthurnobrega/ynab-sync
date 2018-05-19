@@ -1,4 +1,4 @@
-import main, { executeAction, flows } from '.'
+import main, { executeAction } from '.'
 import savedActions from './__mocks__/data/savedActions.json'
 
 describe('Main', () => {
@@ -9,13 +9,13 @@ describe('Main', () => {
   })
 
   it('should execute favorited nubank action', async () => {
-    const response = await executeAction(flows[0], savedActions[0])
+    const response = await executeAction(savedActions[0])
 
     expect(response).toBe(true)
   })
 
   it('should execute favorited bb action', async () => {
-    const response = await executeAction(flows[1], savedActions[0])
+    const response = await executeAction(savedActions[0])
 
     expect(response).toBe(true)
   })

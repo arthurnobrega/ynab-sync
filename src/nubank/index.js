@@ -44,5 +44,9 @@ export default async function executeNubankFlow(action = {}) {
     }
   })
 
-  return { username, transactions }
+  return {
+    ...action,
+    username,
+    transactions,
+  }
 }

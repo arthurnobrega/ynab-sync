@@ -27,6 +27,7 @@ export default async function executeBBFlow(action = {}) {
   })
 
   return {
+    ...action,
     username,
     transactions,
   }

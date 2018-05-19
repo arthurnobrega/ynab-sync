@@ -7,7 +7,13 @@ export default {
     switch (name) {
       // Main
       case 'flowType':
-        return { flowType: 'nubank' }
+        return {
+          flowType: {
+            id: 'nubank',
+            name: 'Nubank',
+            execute: () => {},
+          },
+        }
       case 'actionType':
         return { actionType: 'NEW' }
       case 'actionsToRun':

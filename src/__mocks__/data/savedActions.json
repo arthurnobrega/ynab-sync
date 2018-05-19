@@ -2,6 +2,10 @@
   {
     "id": 1525841807788,
     "when": 1525841807788,
+    "flowType": {
+      "id": "nubank",
+      "name": "Nubank"
+    },
     "username": "123456789",
     "account": {
       "id": "8a9680f0-1393-45d0-86d0-85c9ccb82e66",
@@ -39,6 +43,10 @@
     "id": 1525841827136,
     "when": 1525841827136,
     "username": "987654321",
+    "flowType": {
+      "id": "nubank",
+      "name": "Nubank"
+    },
     "account": {
       "id": "8a9680f0-1393-45d0-86d0-85c9ccb82e66",
       "name": "Nubank",

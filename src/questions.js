@@ -1,15 +1,12 @@
 import inquirer from 'inquirer'
 import { distanceInWords } from 'date-fns'
 
-export async function askForFlowType() {
+export async function askForFlowType(flowTypes) {
   const { flowType } = await inquirer.prompt([{
     type: 'list',
     name: 'flowType',
     message: 'Select an integration type:',
-    choices: [
-      { value: 'nubank', name: 'Nubank' },
-      { value: 'bb', name: 'Banco do Brasil' },
-    ],
+    choices: flowTypes.map(value => ({ value, name: value.name })),
   }])
 
   return flowType
@@ -31,7 +28,7 @@ export async function askForActionType() {
   return actionType
 }
 
-function describeAction(flow, action) {
+function describeAction(action) {
   let usernameText
 
   if (typeof action.username === 'object') {
@@ -40,10 +37,10 @@ function describeAction(flow, action) {
     usernameText = action.username
   }
 
-  return `${flow.name} ${usernameText} => YNAB ${action.account.name} (${action.budget.name})`
+  return `${action.flowType.name} ${usernameText} => YNAB ${action.account.name} (${action.budget.name})`
 }
 
-function actionsToChoices(flow, actions, checked = true) {
+function actionsToChoices(actions, checked = true) {
   const now = new Date()
   let dateSeparator
 
@@ -60,30 +57,30 @@ function actionsToChoices(flow, actions, checked = true) {
       accumulator.push({
         value: action,
         checked,
-        name: describeAction(flow, action),
+        name: describeAction(action),
       })
 
       return accumulator
     }, [])
 }
 
-export async function askForSavedActionsToRun(flow, savedActions) {
+export async function askForSavedActionsToRun(savedActions) {
   const { actionsToRun } = await inquirer.prompt([{
     type: 'checkbox',
     name: 'actionsToRun',
     message: 'Which favorite actions would you like to run?',
-    choices: actionsToChoices(flow, savedActions),
+    choices: actionsToChoices(savedActions),
   }])
 
   return actionsToRun
 }
 
-export async function askForSavedActionsToDelete(flow, savedActions) {
+export async function askForSavedActionsToDelete(savedActions) {
   const { actionsToDelete } = await inquirer.prompt([{
     type: 'checkbox',
     name: 'actionsToDelete',
     message: 'Which favorite actions would you like to DELETE?',
-    choices: actionsToChoices(flow, savedActions, false),
+    choices: actionsToChoices(savedActions, false),
   }])
 
   return actionsToDelete
