@@ -26,8 +26,10 @@ export default async function executeBBFlow(action = {}) {
     }
   })
 
+  const balance = await bb.getBalance()
   return {
     ...action,
+    balance,
     username,
     transactions,
   }

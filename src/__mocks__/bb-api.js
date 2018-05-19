@@ -19,3 +19,5 @@ BB.prototype.getTransactions = ({ year, month }) => [
     amount: 98.31,
   },
 ]
+
+BB.prototype.getBalance = () => 1024.51

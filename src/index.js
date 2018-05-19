@@ -1,9 +1,10 @@
 import chalk from 'chalk'
+import numeral from 'numeral'
 import executeYnabFlow from './ynab'
 import executeNubankFlow from './nubank'
 import executeBBFlow from './bb'
 import db, { initializeDb } from './db'
-import { askForFlowType, askForActionType, askForSavedActionsToRun, askToSaveAction, askForSavedActionsToDelete } from './questions'
+import { askForFlowType, askForActionType, askForSavedActionsToRun, askToSaveAction, askForSavedActionsToDelete, describeUsername } from './questions'
 
 initializeDb()
 
@@ -20,6 +21,20 @@ export const flowTypes = [
   },
 ]
 
+function printBalance(action) {
+  if (action.balance) {
+    const out = `${action.flowType.name} ${describeUsername(action.username)} balance: ${numeral(action.balance).format('$0,0.00')}`
+    const line = '='.repeat(out.length + 8)
+    console.log(' ')
+    console.log(chalk.green(line))
+    console.log(' ')
+    console.log(chalk.green(`==  ${out}  ==`))
+    console.log(' ')
+    console.log(chalk.green(line))
+    console.log(' ')
+  }
+}
+
 export async function executeAction(action = {}) {
   let flowType = action.flowType || await askForFlowType(flowTypes)
   flowType = flowTypes.find(flowT => flowT.id === flowType.id)
@@ -30,6 +45,8 @@ export async function executeAction(action = {}) {
   if (!actionOut) {
     return false
   }
+
+  printBalance(actionOut)
 
   if (!actionOut.id) {
     const save = await askToSaveAction()

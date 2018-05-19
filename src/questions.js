@@ -28,16 +28,18 @@ export async function askForActionType() {
   return actionType
 }
 
-function describeAction(action) {
+export function describeUsername(username) {
   let usernameText
-
-  if (typeof action.username === 'object') {
-    usernameText = Object.values(action.username).join(' / ')
+  if (typeof username === 'object') {
+    usernameText = Object.values(username).join(' / ')
   } else {
-    usernameText = action.username
+    usernameText = username
   }
+  return usernameText
+}
 
-  return `${action.flowType.name} ${usernameText} => YNAB ${action.account.name} (${action.budget.name})`
+function describeAction(action) {
+  return `${action.flowType.name} ${describeUsername(action.username)} => YNAB ${action.account.name} (${action.budget.name})`
 }
 
 function actionsToChoices(actions, checked = true) {

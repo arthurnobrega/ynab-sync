@@ -34,6 +34,7 @@ export default async function executeNubankFlow(action = {}) {
   const filter = await askForFilter()
   const { bill } = await getBillByMonth(filter)
 
+  const balance = bill.summary.total_balance ? (-1 * bill.summary.total_balance) / 100 : 0
   const transactions = bill.line_items.map((transaction) => {
     const { index, charges, title } = transaction
     return {
@@ -46,6 +47,7 @@ export default async function executeNubankFlow(action = {}) {
 
   return {
     ...action,
+    balance,
     username,
     transactions,
   }
