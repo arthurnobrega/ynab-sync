@@ -1,4 +1,5 @@
 import inquirer from 'inquirer'
+import { isDate, parse, differenceInYears, isFuture } from 'date-fns'
 
 export async function askForUsername() {
   const { bbBranch } = await inquirer.prompt([{
@@ -45,14 +46,29 @@ export async function askForPassword(username) {
   return bbPassword
 }
 
+
 export async function askForFilter() {
   const { filter } = await inquirer.prompt([{
     type: 'string',
     name: 'filter',
-    message: 'Type in the filter in the format YYYY-MM (ex: 2018-01):',
+    message: 'From which date do you want to import (YYYY-MM):',
+    default: () => {
+      const date = (new Date()).toISOString().split('T')[0]
+      return date.substring(0, 7)
+    },
     validate: (answer) => {
       if (!(/^[0-9]{4}-[0-9]{2}$/.test(answer))) {
-        return 'That\'s an invalid filter, try again'
+        return 'That\'s an invalid format, try again'
+      }
+      const parsedAnswer = parse(answer)
+      if (!isDate(parsedAnswer)) {
+        return 'That\'s an invalid date, try again'
+      }
+      if (differenceInYears(new Date(), parsedAnswer) >= 100) {
+        return 'That\'s too far in the past, try again'
+      }
+      if (isFuture(parsedAnswer)) {
+        return 'That\'s in the future, no time travels allowed, try again'
       }
       return true
     },
