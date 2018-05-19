@@ -7,7 +7,7 @@ describe('BB flow', () => {
     expect(username).toHaveProperty('branch', '12345')
     expect(username).toHaveProperty('account', '123456')
     expect(transactions.length).toEqual(3)
-    expect(transactions[0]).not.toHaveProperty('import_id')
+    expect(transactions[0]).toHaveProperty('import_id')
     expect(transactions[0]).toHaveProperty('amount')
     expect(transactions[0]).toHaveProperty('date')
     expect(transactions[0]).toHaveProperty('memo')
