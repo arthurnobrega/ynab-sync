@@ -3294,9 +3294,9 @@ npmlog@^4.0.2:
     gauge "~2.7.3"
     set-blocking "~2.0.0"
 
-"nubank@git+ssh://git@github.com/arthurnobrega/nubank-api.git#ynab-sync":
+"nubank@git+https://github.com/arthurnobrega/nubank-api.git#ynab-sync":
   version "1.1.4"
-  resolved "git+ssh://git@github.com/arthurnobrega/nubank-api.git#e14ecdc9bebbaab7e4065fa8df2f792897d9ec97"
+  resolved "git+https://github.com/arthurnobrega/nubank-api.git#e14ecdc9bebbaab7e4065fa8df2f792897d9ec97"
   dependencies:
     jest-cli "^22.4.3"
     lodash "^4.17.10"

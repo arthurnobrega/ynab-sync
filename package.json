@@ -27,7 +27,7 @@
     "inquirer": "^5.2.0",
     "lowdb": "^1.0.0",
     "md5": "^2.2.1",
-    "nubank": "git+ssh://git@github.com/arthurnobrega/nubank-api.git#ynab-sync",
+    "nubank": "git+https://github.com/arthurnobrega/nubank-api.git#ynab-sync",
     "numeral": "^2.0.6",
     "ynab": "^0.16.0"
   },
