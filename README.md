@@ -1,4 +1,4 @@
-# ynab-sync
+# ynab-sync [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/arthurnobrega/ynab-sync/blob/master/LICENSE) [![Build Status](https://travis-ci.org/arthurnobrega/ynab-sync.svg?branch=master)](https://travis-ci.org/arthurnobrega/ynab-sync)
 > Sync YNAB with NuBank and Banco do Brasil's transactions
 
 ## Installation
