@@ -12,7 +12,13 @@ export default async function executeBBFlow(action = {}) {
   const filterParts = filter.split('-')
 
   await bb.login({ ...username, password })
-  const response = await bb.getTransactions({ year: filterParts[0], month: filterParts[1] })
+
+  let response = await bb.getTransactions({ year: filterParts[0], month: filterParts[1] })
+  if (response.length === 0) {
+    // try again - paliativo pq a primeira consulta do BB agora retorna uma mensagem de alerta
+    // 'Esta versão do aplicativo não será mais suportada ....'
+    response = await bb.getTransactions({ year: filterParts[0], month: filterParts[1] })
+  }
 
   const transactions = response.map((transaction) => {
     const { description: memo, date, amount: sourceAmount } = transaction
