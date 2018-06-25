@@ -3,3 +3,4 @@ dist
 *.ofx
 yarn-error\.log
 db.json
+.yalc
