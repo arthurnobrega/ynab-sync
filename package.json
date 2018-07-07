@@ -21,7 +21,7 @@
     ]
   },
   "dependencies": {
-    "bb-api": "^1.0.4",
+    "bb-api": "^1.0.5",
     "chalk": "^2.4.1",
     "date-fns": "^1.29.0",
     "inquirer": "^5.2.0",

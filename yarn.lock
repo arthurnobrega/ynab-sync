@@ -1032,9 +1032,9 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-bb-api@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/bb-api/-/bb-api-1.0.4.tgz#cc7722de0081170b56b8702257bdcbb4f7a037b9"
+bb-api@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/bb-api/-/bb-api-1.0.5.tgz#0ddc91933db79d9898ecbf1943b28faa4862617a"
   dependencies:
     node-fetch "^2.1.2"
 
@@ -3295,7 +3295,7 @@ npmlog@^4.0.2:
     set-blocking "~2.0.0"
 
 "nubank@git+https://github.com/arthurnobrega/nubank-api.git#ynab-sync":
-  version "1.1.4"
+  version "1.1.5"
   resolved "git+https://github.com/arthurnobrega/nubank-api.git#523bf8d5e6da112590c14f063f0a920dcecc8eea"
   dependencies:
     jest-cli "^22.4.3"
