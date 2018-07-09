@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import db from '../db'
 import { askForPassword, askForUsername, askForFilter } from './questions'
-import { setLoginToken, requestNewToken, getBillByMonth } from './middleware'
+import { setLoginToken, requestNewToken, getBillByMonth, getCheckingBalance, getCheckingTransactions } from './middleware'
 
 export default async function executeNubankFlow(action = {}) {
   const username = action.username || await askForUsername()
@@ -31,24 +31,55 @@ export default async function executeNubankFlow(action = {}) {
       .write()
   }
 
-  const filter = await askForFilter()
-  const { bill } = await getBillByMonth(filter)
+  if (action.flowType.id === 'nubank-card') {
+    const filter = await askForFilter()
+    const { bill } = await getBillByMonth(filter)
 
-  const balance = bill.summary.total_balance ? (-1 * bill.summary.total_balance) / 100 : 0
-  const transactions = bill.line_items.map((transaction) => {
-    const { index, charges, title } = transaction
+    const balance = bill.summary.total_balance ? (-1 * bill.summary.total_balance) / 100 : 0
+    const transactions = bill.line_items.map((transaction) => {
+      const { index, charges, title } = transaction
+      return {
+        import_id: transaction.id,
+        amount: parseInt(-1 * transaction.amount * 10, 10),
+        date: transaction.post_date,
+        memo: charges !== 1 ? `${title}, ${index + 1}/${charges}` : title,
+      }
+    })
+
     return {
-      import_id: transaction.id,
-      amount: parseInt(-1 * transaction.amount * 10, 10),
-      date: transaction.post_date,
-      memo: charges !== 1 ? `${title}, ${index + 1}/${charges}` : title,
+      ...action,
+      balance,
+      username,
+      transactions,
     }
-  })
+  } else if (action.flowType.id === 'nubank-account') {
+    const checkTrans = await getCheckingTransactions()
 
-  return {
-    ...action,
-    balance,
-    username,
-    transactions,
+    const checkBalance = await getCheckingBalance()
+    const balance = checkBalance.data.viewer.savingsAccount.currentSavingsBalance.netAmount
+    const transactions = checkTrans.data.viewer.savingsAccount.feed.reduce((acc, transaction) => {
+      if (transaction.amount) {
+        const sign = transaction.__typename !== 'TransferInEvent' ? -1 : +1
+
+        return [
+          ...acc,
+          {
+            import_id: transaction.id,
+            amount: parseInt(sign * transaction.amount * 1000, 10),
+            date: transaction.postDate,
+            memo: `${transaction.title} ${transaction.detail}`,
+          },
+        ]
+      }
+
+      return acc
+    }, [])
+
+    return {
+      ...action,
+      balance,
+      username,
+      transactions,
+    }
   }
 }

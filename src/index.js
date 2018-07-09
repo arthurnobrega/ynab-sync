@@ -10,8 +10,13 @@ initializeDb()
 
 export const flowTypes = [
   {
-    id: 'nubank',
-    name: 'Nubank',
+    id: 'nubank-card',
+    name: 'Nubank Credit Card',
+    execute: executeNubankFlow,
+  },
+  {
+    id: 'nubank-account',
+    name: 'NuConta',
     execute: executeNubankFlow,
   },
   {

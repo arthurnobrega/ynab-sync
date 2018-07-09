@@ -21,3 +21,15 @@ export async function getBillByMonth(filter) {
 
   return bill
 }
+
+export async function getCheckingTransactions(filter) {
+  const trasactions = await NuBank.getCheckingTransactions(filter)
+
+  return trasactions
+}
+
+export async function getCheckingBalance() {
+  const balance = await NuBank.getCheckingBalance()
+
+  return balance
+}
