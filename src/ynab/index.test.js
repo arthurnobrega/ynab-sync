@@ -1,11 +1,11 @@
 import executeNubankFlow from '../nubank'
 import executeBBFlow from '../bb'
 import executeYnabFlow from '.'
-import { flowTypes } from '../.'
+import { FLOWTYPES } from '../.'
 
 describe('YNAB flow', () => {
   it('should return action object for nubank flow', async () => {
-    const { transactions, ...remainingProps } = await executeNubankFlow({ flowType: flowTypes[0] })
+    const { transactions, ...remainingProps } = await executeNubankFlow({ flowType: FLOWTYPES[0] })
     const action = await executeYnabFlow(remainingProps, transactions)
 
     expect(action).toHaveProperty('username')
@@ -17,11 +17,11 @@ describe('YNAB flow', () => {
     expect(action).toHaveProperty('account.id')
     expect(action).toHaveProperty('account.name')
   })
-  
+
   it('should return action object for bb flow', async () => {
-    const { transactions, ...remainingProps } = await executeBBFlow({ flowType: flowTypes[1] })
+    const { transactions, ...remainingProps } = await executeBBFlow({ flowType: FLOWTYPES[1] })
     const action = await executeYnabFlow(remainingProps, transactions)
-    
+
     expect(action).toHaveProperty('username')
     expect(action.username).toHaveProperty('branch')
     expect(action.username).toHaveProperty('account')

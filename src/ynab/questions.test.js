@@ -2,7 +2,7 @@ import { askForBudget, askForAccount, askForConfirm } from './questions'
 import budgets from '../__mocks__/data/ynabBudgets.json'
 import accounts from '../__mocks__/data/ynabAccounts.json'
 import transactions from '../__mocks__/data/ynabTransactions.json'
-import { flowTypes } from '../.'
+import { FLOWTYPES } from '../.'
 
 describe('YNAB questions', () => {
   it('should return budget', async () => {
@@ -28,7 +28,7 @@ describe('YNAB questions', () => {
     const confirm = await askForConfirm({
       account,
       budget,
-      flowType: flowTypes[0],
+      flowType: FLOWTYPES[0],
     }, transactions.data.transactions)
 
     expect(confirm).toBeTruthy()

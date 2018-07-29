@@ -3,7 +3,7 @@
     "id": 1525841807788,
     "when": 1525841807788,
     "flowType": {
-      "id": "nubank",
+      "id": "nubank-card",
       "name": "Nubank"
     },
     "username": "123456789",
@@ -44,7 +44,7 @@
     "when": 1525841827136,
     "username": "987654321",
     "flowType": {
-      "id": "nubank",
+      "id": "nubank-card",
       "name": "Nubank"
     },
     "account": {
@@ -78,5 +78,50 @@
       "first_month": "2017-10-01",
       "last_month": "2018-05-01"
     }
+  },
+
+  {
+    "flowType": {
+      "id": "bb",
+      "name": "Banco do Brasil"
+    },
+    "balance": 0,
+    "username": {
+      "branch": "10000",
+      "account": "249531"
+    },
+    "budget": {
+      "id": "7ddae870-abce-3cc4-33a1-4c5pl0c8cb0d",
+      "name": "My Budget",
+      "last_modified_on": "2018-05-20T01:38:48+00:00",
+      "date_format": {
+        "format": "DD/MM/YYYY"
+      },
+      "currency_format": {
+        "iso_code": "BRL",
+        "example_format": "123.456,78",
+        "decimal_digits": 2,
+        "decimal_separator": ",",
+        "symbol_first": true,
+        "group_separator": ".",
+        "currency_symbol": "R$",
+        "display_symbol": true
+      },
+      "first_month": "2017-01-01",
+      "last_month": "2018-05-01"
+    },
+    "account": {
+      "id": "8s7895ol-4d9-723d-1234-12edf89635to",
+      "name": "Conta Corrente BB",
+      "type": "checking",
+      "on_budget": true,
+      "closed": false,
+      "note": null,
+      "balance": 25948931,
+      "cleared_balance": 25948931,
+      "uncleared_balance": 0
+    },
+    "id": 1526955117217,
+    "when": 1532304656181
   }
 ]

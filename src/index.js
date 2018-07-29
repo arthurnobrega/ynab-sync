@@ -8,7 +8,7 @@ import { askForFlowType, askForActionType, askForSavedActionsToRun, askToSaveAct
 
 initializeDb()
 
-export const flowTypes = [
+export const FLOWTYPES = [
   {
     id: 'nubank-card',
     name: 'Nubank Credit Card',
@@ -41,8 +41,8 @@ function printBalance(action) {
 }
 
 export async function executeAction(action = {}) {
-  let flowType = action.flowType || await askForFlowType(flowTypes)
-  flowType = flowTypes.find(flowT => flowT.id === flowType.id)
+  let flowType = action.flowType || await askForFlowType(FLOWTYPES)
+  flowType = FLOWTYPES.find(flowT => flowT.id === flowType.id)
 
   const { transactions, ...remainingProps } = await flowType.execute({ ...action, flowType })
   let actionOut = await executeYnabFlow(remainingProps, transactions)

@@ -9,8 +9,8 @@ export default {
       case 'flowType':
         return {
           flowType: {
-            id: 'nubank',
-            name: 'Nubank',
+            id: 'nubank-card',
+            name: 'Nubank Credit Card',
             execute: () => {},
           },
         }

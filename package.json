@@ -29,6 +29,7 @@
     "md5": "^2.2.1",
     "nubank": "git+https://github.com/arthurnobrega/nubank-api.git#ynab-sync",
     "numeral": "^2.0.6",
+    "yargs": "^12.0.1",
     "ynab": "^0.16.0"
   },
   "devDependencies": {

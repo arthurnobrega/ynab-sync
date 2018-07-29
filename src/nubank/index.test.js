@@ -1,8 +1,13 @@
 import executeNubankFlow from '.'
 
-describe('Nubank flow', () => {
+describe('Nubank card flow', () => {
   it('should return array of transactions in correct form', async () => {
-    const { username, transactions } = await executeNubankFlow()
+    const flowType = {
+      id: 'nubank-card',
+      name: 'Nubank Credit Card',
+      execute: executeNubankFlow,
+    }
+    const { username, transactions } = await executeNubankFlow({ flowType })
 
     expect(username).toEqual('45678932158')
     expect(transactions.length).toEqual(3)
