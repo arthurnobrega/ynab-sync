@@ -1,4 +1,6 @@
+import inquirer from 'inquirer'
 import executeBBFlow from '.'
+import savedActions from '../__mocks__/data/savedActions.json'
 
 describe('BB flow', () => {
   it('should return array of transactions in correct form', async () => {
@@ -11,5 +13,19 @@ describe('BB flow', () => {
     expect(transactions[0]).toHaveProperty('amount')
     expect(transactions[0]).toHaveProperty('date')
     expect(transactions[0]).toHaveProperty('memo')
+  })
+
+  it('should execute bb action without questions', async () => {
+    const spy = jest.spyOn(inquirer, 'prompt')
+    await executeBBFlow({
+      ...savedActions[2],
+      args: {
+        runOnce: true,
+        yesToAll: true,
+        password: '123456',
+      },
+    })
+
+    expect(spy).not.toHaveBeenCalled()
   })
 })

@@ -1,14 +1,20 @@
 import BB from 'bb-api'
 import md5 from 'md5'
-import { askForUsername, askForPassword, askForFilter } from './questions'
+import { askForUsername, askForPassword, defaultFilter, askForFilter } from './questions'
 
 const bb = new BB()
 
 export default async function executeBBFlow(action = {}) {
+  const { args } = action
   const username = action.username || await askForUsername()
-  const password = await askForPassword(username)
 
-  const filter = await askForFilter()
+  if (args && args.yesToAll && !args.password) {
+    throw new Error('BB Password not defined')
+  }
+
+  const password = (args && args.password) || await askForPassword(username)
+
+  const filter = (args && args.yesToAll) ? defaultFilter() : await askForFilter()
   const filterParts = filter.split('-')
 
   await bb.login({ ...username, password })

@@ -46,16 +46,17 @@ export async function askForPassword(username) {
   return bbPassword
 }
 
+export function defaultFilter() {
+  const date = (new Date()).toISOString().split('T')[0]
+  return date.substring(0, 7)
+}
 
 export async function askForFilter() {
   const { filter } = await inquirer.prompt([{
     type: 'string',
     name: 'filter',
     message: 'From which date do you want to import (YYYY-MM):',
-    default: () => {
-      const date = (new Date()).toISOString().split('T')[0]
-      return date.substring(0, 7)
-    },
+    default: defaultFilter,
     validate: (answer) => {
       if (!(/^[0-9]{4}-[0-9]{2}$/.test(answer))) {
         return 'That\'s an invalid format, try again'
