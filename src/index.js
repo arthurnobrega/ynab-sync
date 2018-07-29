@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import numeral from 'numeral'
+import 'yargs'
 import executeYnabFlow from './ynab'
 import executeNubankFlow from './nubank'
 import executeBBFlow from './bb'
@@ -13,16 +14,19 @@ export const FLOWTYPES = [
     id: 'nubank-card',
     name: 'Nubank Credit Card',
     execute: executeNubankFlow,
+    passwordCommand: 'nubankPassword',
   },
   {
     id: 'nubank-account',
     name: 'NuConta',
     execute: executeNubankFlow,
+    passwordCommand: 'nubankPassword',
   },
   {
     id: 'bb',
     name: 'Banco do Brasil',
     execute: executeBBFlow,
+    passwordCommand: 'bbPassword',
   },
 ]
 
@@ -40,12 +44,21 @@ function printBalance(action) {
   }
 }
 
-export async function executeAction(action = {}) {
-  let flowType = action.flowType || await askForFlowType(FLOWTYPES)
+export async function executeAction(params = {}) {
+  const { action, args } = params
+
+  let flowType = (action && action.flowType) || await askForFlowType(FLOWTYPES)
   flowType = FLOWTYPES.find(flowT => flowT.id === flowType.id)
 
-  const { transactions, ...remainingProps } = await flowType.execute({ ...action, flowType })
-  let actionOut = await executeYnabFlow(remainingProps, transactions)
+  const { transactions, ...remainingProps } = await flowType.execute({
+    ...action,
+    flowType,
+    args: {
+      ...args,
+      password: args ? args[flowType.passwordCommand] : '',
+    },
+  })
+  let actionOut = await executeYnabFlow({ ...remainingProps, args }, transactions)
 
   if (!actionOut) {
     return false
@@ -81,15 +94,15 @@ export async function executeAction(action = {}) {
   return true
 }
 
-async function executeActionArray(favoriteActions) {
+async function executeActionArray({ actions, args }) {
   let result = Promise.resolve()
-  favoriteActions.forEach((act) => {
-    result = result.then(() => executeAction(act))
+  actions.forEach((action) => {
+    result = result.then(() => executeAction({ action, args }))
   })
   return result
 }
 
-async function main(action = {}) {
+async function main(params = {}) {
   if (!process.env.YNAB_TOKEN) {
     console.log(chalk.red('You need to set YNAB_TOKEN environment variable. Please read the README.md.'))
     return false
@@ -99,17 +112,27 @@ async function main(action = {}) {
     .get('favoriteActions')
     .value()
 
-  const newActionType = action.actionType || await askForActionType()
-  switch (newActionType) {
+  const { args } = params
+  const actionType = params.actionType || await askForActionType()
+  switch (actionType) {
     case 'NEW':
-      await executeAction()
-      main()
+      await executeAction({ args })
+
+      if (!args || !args.yesToAllOnce) {
+        main()
+      }
+
       break
 
     case 'FAVORITE': {
-      const actions = await askForSavedActionsToRun(savedActions)
-      await executeActionArray(actions)
-      main()
+      const actions = (args && args.yesToAllOnce) ? savedActions
+        : await askForSavedActionsToRun(params, savedActions)
+      await executeActionArray({ actions, args })
+
+      if (!args || !args.yesToAllOnce) {
+        main()
+      }
+
       break
     }
 
@@ -120,7 +143,11 @@ async function main(action = {}) {
           .remove({ id: favoriteAction.id })
           .write()
       })
-      main()
+
+      if (!args || !args.yesToAllOnce) {
+        main()
+      }
+
       break
     }
 
@@ -135,5 +162,22 @@ export { main as default }
 
 // Run main if it was called by shell
 if (require.main === module) {
-  main()
+  const args = require('yargs') // eslint-disable-line
+    .option('bbPassword', {
+      default: '',
+    })
+    .option('nubankPassword', {
+      default: '',
+    })
+    .option('yesToAllOnce', {
+      alias: 'y',
+      default: false,
+    })
+    .argv
+
+  if (args.yesToAllOnce) {
+    main({ args, actionType: 'FAVORITE' })
+  } else {
+    main()
+  }
 }
