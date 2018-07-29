@@ -1,10 +1,15 @@
 import chalk from 'chalk'
 import db from '../db'
-import { askForPassword, askForUsername, askForFilter } from './questions'
+import { askForPassword, askForUsername, defaultFilter, askForFilter } from './questions'
 import { setLoginToken, requestNewToken, getBillByMonth, getCheckingBalance, getCheckingTransactions } from './middleware'
 
 export default async function executeNubankFlow(action = {}) {
+  const { args } = action
   const username = action.username || await askForUsername()
+
+  if (args && args.yesToAll && !args.password) {
+    throw new Error('Nubank Password not defined')
+  }
 
   let record = db.get('nubankTokens')
     .find({ username })
@@ -23,7 +28,7 @@ export default async function executeNubankFlow(action = {}) {
     console.log(chalk.blue(`Using valid NuBank token stored for username ${username}...`))
     setLoginToken(record.token)
   } else {
-    const password = await askForPassword(username)
+    const password = (args && args.password) || await askForPassword(username)
     const token = await requestNewToken(username, password)
 
     db.get('nubankTokens')
@@ -32,7 +37,7 @@ export default async function executeNubankFlow(action = {}) {
   }
 
   if (action.flowType.id === 'nubank-card') {
-    const filter = await askForFilter()
+    const filter = (args && args.yesToAll) ? defaultFilter() : await askForFilter()
     const { bill } = await getBillByMonth(filter)
 
     const balance = bill.summary.total_balance ? (-1 * bill.summary.total_balance) / 100 : 0

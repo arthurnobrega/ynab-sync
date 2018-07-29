@@ -4,7 +4,7 @@
     "when": 1525841807788,
     "flowType": {
       "id": "nubank-card",
-      "name": "Nubank"
+      "name": "Nubank Credit Card"
     },
     "username": "123456789",
     "account": {
@@ -44,8 +44,8 @@
     "when": 1525841827136,
     "username": "987654321",
     "flowType": {
-      "id": "nubank-card",
-      "name": "Nubank"
+      "id": "nubank-account",
+      "name": "Nubank Account"
     },
     "account": {
       "id": "8a9680f0-1393-45d0-86d0-85c9ccb82e66",

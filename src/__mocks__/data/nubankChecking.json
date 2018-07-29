@@ -1,0 +1,40 @@
+{
+	"data": {
+		"viewer": {
+			"savingsAccount": {
+				"feed": [
+					{
+						"id": "5sdo098s-ee48-4896-pe97-159sd075sk15",
+						"__typename": "TransferOutEvent",
+						"title": "Transferência enviada",
+						"detail": "Cabral - R$ 82,91",
+						"postDate": "2018-01-17",
+						"amount": 82.91,
+						"destinationAccount": {
+							"name": "Cabral"
+						}
+					},
+					{
+						"id": "5sdo098s-ee48-4896-pe97-159sd075sk15",
+						"__typename": "TransferInEvent",
+						"title": "Transferência recebida",
+						"detail": "R$ 2.000,00",
+						"postDate": "2018-01-16",
+						"amount": 2000.0
+					},
+					{
+						"id": "5sdo098s-ee48-4896-pe97-159sd075sk15",
+						"__typename": "TransferOutEvent",
+						"title": "Transferência enviada",
+						"detail": "Clínica XYZ - R$ 845,00",
+						"postDate": "2018-01-04",
+						"amount": 845.0,
+						"destinationAccount": {
+							"name": "Clínica XYZ"
+						}
+					}
+				]
+			}
+		}
+	}
+}

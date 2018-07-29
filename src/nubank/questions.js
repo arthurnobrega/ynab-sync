@@ -31,12 +31,16 @@ export async function askForPassword(username) {
   return password
 }
 
+export function defaultFilter() {
+  return format(new Date(), 'YYYY-MM')
+}
+
 export async function askForFilter() {
   const { filter } = await inquirer.prompt([{
     type: 'string',
     name: 'filter',
     message: 'From which date do you want to import (YYYY-MM):',
-    default: () => format(new Date(), 'YYYY-MM'),
+    default: defaultFilter,
     validate: (answer) => {
       if (!(/^[0-9]{4}-[0-9]{2}$/.test(answer))) {
         return 'That\'s an invalid format, try again'
