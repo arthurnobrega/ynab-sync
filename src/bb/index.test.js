@@ -17,7 +17,7 @@ describe('BB flow', () => {
 
   it('should execute bb action without questions', async () => {
     const spy = jest.spyOn(inquirer, 'prompt')
-    await executeBBFlow({
+    const response = await executeBBFlow({
       ...savedActions[2],
       args: {
         yesToAllOnce: true,
@@ -26,5 +26,6 @@ describe('BB flow', () => {
     })
 
     expect(spy).not.toHaveBeenCalled()
+    expect(response).not.toHaveProperty('args')
   })
 })

@@ -3,8 +3,8 @@ import db from '../db'
 import { askForPassword, askForUsername, defaultFilter, askForFilter } from './questions'
 import { setLoginToken, requestNewToken, getBillByMonth, getCheckingBalance, getCheckingTransactions } from './middleware'
 
-export default async function executeNubankFlow(action = {}) {
-  const { args } = action
+export default async function executeNubankFlow(_action = {}) {
+  const { args, ...action } = _action
   const username = action.username || await askForUsername()
 
   if (args && args.yesToAllOnce && !args.password) {

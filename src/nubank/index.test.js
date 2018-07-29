@@ -21,22 +21,8 @@ describe('Nubank card flow', () => {
 
   it('should execute nubank credit card action without questions', async () => {
     const spy = jest.spyOn(inquirer, 'prompt')
-    await executeNubankFlow({
+    const response = await executeNubankFlow({
       ...savedActions[0],
-      args: {
-        runOnce: true,
-        yesToAll: true,
-        password: '123456',
-      },
-    })
-
-    expect(spy).not.toHaveBeenCalled()
-  })
-
-  it('should execute nubank credit card action without questions', async () => {
-    const spy = jest.spyOn(inquirer, 'prompt')
-    await executeNubankFlow({
-      ...savedActions[1],
       args: {
         yesToAllOnce: true,
         password: '123456',
@@ -44,5 +30,20 @@ describe('Nubank card flow', () => {
     })
 
     expect(spy).not.toHaveBeenCalled()
+    expect(response).not.toHaveProperty('args')
   })
+
+  // it('should execute nubank account action without questions', async () => {
+  //   const spy = jest.spyOn(inquirer, 'prompt')
+  //   const response = await executeNubankFlow({
+  //     ...savedActions[1],
+  //     args: {
+  //       yesToAllOnce: true,
+  //       password: '123456',
+  //     },
+  //   })
+
+  //   expect(spy).not.toHaveBeenCalled()
+  //   expect(response).not.toHaveProperty('args')
+  // })
 })

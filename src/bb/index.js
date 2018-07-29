@@ -4,8 +4,8 @@ import { askForUsername, askForPassword, defaultFilter, askForFilter } from './q
 
 const bb = new BB()
 
-export default async function executeBBFlow(action = {}) {
-  const { args } = action
+export default async function executeBBFlow(_action = {}) {
+  const { args, ...action } = _action
   const username = action.username || await askForUsername()
 
   if (args && args.yesToAllOnce && !args.password) {
