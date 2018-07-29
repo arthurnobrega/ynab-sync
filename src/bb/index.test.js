@@ -20,8 +20,7 @@ describe('BB flow', () => {
     await executeBBFlow({
       ...savedActions[2],
       args: {
-        runOnce: true,
-        yesToAll: true,
+        yesToAllOnce: true,
         password: '123456',
       },
     })

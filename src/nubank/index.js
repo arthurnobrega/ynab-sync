@@ -7,7 +7,7 @@ export default async function executeNubankFlow(action = {}) {
   const { args } = action
   const username = action.username || await askForUsername()
 
-  if (args && args.yesToAll && !args.password) {
+  if (args && args.yesToAllOnce && !args.password) {
     throw new Error('Nubank Password not defined')
   }
 
@@ -37,7 +37,7 @@ export default async function executeNubankFlow(action = {}) {
   }
 
   if (action.flowType.id === 'nubank-card') {
-    const filter = (args && args.yesToAll) ? defaultFilter() : await askForFilter()
+    const filter = (args && args.yesToAllOnce) ? defaultFilter() : await askForFilter()
     const { bill } = await getBillByMonth(filter)
 
     const balance = bill.summary.total_balance ? (-1 * bill.summary.total_balance) / 100 : 0

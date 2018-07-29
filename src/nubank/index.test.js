@@ -38,8 +38,7 @@ describe('Nubank card flow', () => {
     await executeNubankFlow({
       ...savedActions[1],
       args: {
-        runOnce: true,
-        yesToAll: true,
+        yesToAllOnce: true,
         password: '123456',
       },
     })
