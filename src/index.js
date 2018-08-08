@@ -126,7 +126,7 @@ async function main(params = {}) {
 
     case 'FAVORITE': {
       const actions = (args && args.yesToAllOnce) ? savedActions
-        : await askForSavedActionsToRun(params, savedActions)
+        : await askForSavedActionsToRun(savedActions)
       await executeActionArray({ actions, args })
 
       if (!args || !args.yesToAllOnce) {
