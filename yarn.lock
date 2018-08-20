@@ -1038,9 +1038,9 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-bb-api@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/bb-api/-/bb-api-1.0.6.tgz#964a0492225c4c9549326d56f9ec8520748460d6"
+bb-api@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/bb-api/-/bb-api-1.0.7.tgz#0eee23d9ba5f993c33068e4d0473ec4b77b83114"
   dependencies:
     node-fetch "^2.1.2"
 
