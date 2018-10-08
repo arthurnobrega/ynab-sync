@@ -8,10 +8,6 @@ export default async function executeBBFlow(_action = {}) {
   const { args, ...action } = _action
   const username = action.username || await askForUsername()
 
-  if (args && args.yesToAllOnce && !args.password) {
-    throw new Error('BB Password not defined')
-  }
-
   const password = (args && args.password) || await askForPassword(username)
 
   const filter = (args && args.yesToAllOnce) ? defaultFilter() : await askForFilter()

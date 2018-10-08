@@ -7,10 +7,6 @@ export default async function executeNubankFlow(_action = {}) {
   const { args, ...action } = _action
   const username = action.username || await askForUsername()
 
-  if (args && args.yesToAllOnce && !args.password) {
-    throw new Error('Nubank Password not defined')
-  }
-
   let record = db.get('nubankTokens')
     .find({ username })
     .value()
