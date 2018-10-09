@@ -1161,10 +1161,10 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-bb-api@^1.0.10:
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/bb-api/-/bb-api-1.0.10.tgz#aee5a7e0a4435fb212ec7e1acb9cdde6af29bc25"
-  integrity sha512-rttTbRjRg5JquAsenuoPRzNda60PRMViZ+A+J5wyRgCnh/l75e95PJFm6ldSVMv9sofV1bsscYhdd1JnZebiag==
+bb-api@^1.0.11:
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/bb-api/-/bb-api-1.0.11.tgz#c8ec1e2dc12eabc51f401aa5a7e728d4888c3768"
+  integrity sha512-JSodACitYa0SImJLw122h46+zRsMFZIFjR7qjJqEX27GWT/l7mUzw2zBuaPg8L+SbOT8pdOmMYRvCCpzEESSGQ==
   dependencies:
     node-fetch "^2.1.2"
 
