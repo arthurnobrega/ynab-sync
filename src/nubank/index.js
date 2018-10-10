@@ -3,23 +3,57 @@ import db from '../db'
 import { askForPassword, askForUsername, defaultFilter, askForFilter } from './questions'
 import { setLoginToken, requestNewToken, getBillByMonth, getCheckingBalance, getCheckingTransactions } from './middleware'
 
+async function processNubankCardData(filter) {
+  try {
+    const { bill } = await getBillByMonth(filter)
+
+    const balance = bill.summary.total_balance ? (-1 * bill.summary.total_balance) / 100 : 0
+    const transactions = bill.line_items.map((transaction) => {
+      const { index, charges, title } = transaction
+      return {
+        import_id: transaction.id,
+        amount: parseInt(-1 * transaction.amount * 10, 10),
+        date: transaction.post_date,
+        memo: charges !== 1 ? `${title}, ${index + 1}/${charges}` : title,
+      }
+    })
+
+    return { balance, transactions }
+  } catch (error) {
+    console.error(error)
+  }
+
+  return {
+    transactions: [],
+    balance: 0,
+  }
+}
 
 async function getNubankCardData(args) {
-  const filter = (args && args.yesToAllOnce) ? defaultFilter() : await askForFilter()
-  const { bill } = await getBillByMonth(filter)
+  const filters = []
 
-  const balance = bill.summary.total_balance ? (-1 * bill.summary.total_balance) / 100 : 0
-  const transactions = bill.line_items.map((transaction) => {
-    const { index, charges, title } = transaction
-    return {
-      import_id: transaction.id,
-      amount: parseInt(-1 * transaction.amount * 10, 10),
-      date: transaction.post_date,
-      memo: charges !== 1 ? `${title}, ${index + 1}/${charges}` : title,
-    }
-  })
+  if (args && args.syncLastTwoMonths) {
+    filters.push(defaultFilter(true))
+    filters.push(defaultFilter())
+  } else if (args && args.yesToAllOnce) {
+    filters.push(defaultFilter())
+  } else {
+    filters.push(await askForFilter())
+  }
 
-  return { balance, transactions }
+  const result = await Promise
+    .all(filters.map(date => processNubankCardData(date)))
+
+  const response = result
+    .reduce((acc, item) => ({
+      transactions: acc.transactions.concat(item.transactions),
+      balance: acc.balance + item.balance,
+    }), {
+      transactions: [],
+      balance: 0,
+    })
+
+  return response
 }
 
 async function getNubankAccountData() {

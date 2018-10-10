@@ -173,7 +173,15 @@ if (require.main === module) {
       alias: 'y',
       default: false,
     })
+    .option('syncLastTwoMonths', {
+      alias: 'fullSync',
+      default: false,
+    })
     .argv
+
+  if (args.syncLastTwoMonths) {
+    args.yesToAllOnce = true
+  }
 
   if (args.yesToAllOnce) {
     main({ args, actionType: 'FAVORITE' })

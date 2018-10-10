@@ -1,5 +1,5 @@
 import inquirer from 'inquirer'
-import { format, isDate, parse, differenceInYears, isFuture } from 'date-fns'
+import { addMonths, format, isDate, parse, differenceInYears, isFuture } from 'date-fns'
 
 export async function askForUsername() {
   const { username } = await inquirer.prompt([{
@@ -31,8 +31,12 @@ export async function askForPassword(username) {
   return password
 }
 
-export function defaultFilter() {
-  return format(new Date(), 'YYYY-MM')
+export function defaultFilter(lastMonth = false) {
+  let date = new Date()
+  if (!lastMonth) {
+    date = addMonths(date, -1)
+  }
+  return format(date, 'YYYY-MM')
 }
 
 export async function askForFilter() {

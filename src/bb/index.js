@@ -4,16 +4,8 @@ import { askForUsername, askForPassword, defaultFilter, askForFilter } from './q
 
 const bb = new BB()
 
-export default async function executeBBFlow(_action = {}) {
-  const { args, ...action } = _action
-  const username = action.username || await askForUsername()
-
-  const password = (args && args.password) || await askForPassword(username)
-
-  const filter = (args && args.yesToAllOnce) ? defaultFilter() : await askForFilter()
+async function processBBData(filter) {
   const filterParts = filter.split('-')
-
-  await bb.login({ ...username, password })
 
   let response = await bb.getTransactions({ year: filterParts[0], month: filterParts[1] })
   if (response.length === 0) {
@@ -33,6 +25,33 @@ export default async function executeBBFlow(_action = {}) {
       import_id: md5(JSON.stringify({ date, memo, amount })),
     }
   })
+
+  return transactions
+}
+
+export default async function executeBBFlow(_action = {}) {
+  const { args, ...action } = _action
+  const username = action.username || await askForUsername()
+
+  const password = (args && args.password) || await askForPassword(username)
+
+  const filters = []
+  if (args && args.syncLastTwoMonths) {
+    filters.push(defaultFilter(true))
+    filters.push(defaultFilter())
+  } else if (args && args.yesToAllOnce) {
+    filters.push(defaultFilter())
+  } else {
+    filters.push(await askForFilter())
+  }
+
+  await bb.login({ ...username, password })
+
+  const result = await Promise
+    .all(filters.map(date => processBBData(date)))
+
+  const transactions = result
+    .reduce((acc, item) => acc.concat(item), [])
 
   const balance = await bb.getBalance()
   return {
