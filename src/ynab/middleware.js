@@ -17,7 +17,12 @@ export async function getAccounts(budgetId) {
 }
 
 export async function importTransactions(budgetId, transactions) {
-  const response = await ynabAPI.transactions.bulkCreateTransactions(budgetId, { transactions })
+  // Remove future transactions
+  const filteredTransactions = transactions.filter(t => t.date < new Date())
+
+  const response = await ynabAPI.transactions.bulkCreateTransactions(budgetId, {
+    transactions: filteredTransactions,
+  })
 
   return response
 }
