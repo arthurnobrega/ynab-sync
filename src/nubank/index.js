@@ -7,7 +7,11 @@ async function processNubankCardData(filter) {
   try {
     const { bill } = await getBillByMonth(filter)
 
-    const balance = bill.summary.total_balance ? (-1 * bill.summary.total_balance) / 100 : 0
+    let balance = 0
+    if (bill.summary.total_balance) {
+      balance = -1 * ((bill.summary.total_balance - bill.summary.paid) / 100)
+    }
+
     const transactions = bill.line_items.map((transaction) => {
       const { index, charges, title } = transaction
       return {
