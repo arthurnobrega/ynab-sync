@@ -4,3 +4,7 @@ dist
 yarn-error\.log
 db.json
 .yalc
+
+db\.json\.bkp
+
+db\.json\.test

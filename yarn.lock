@@ -1161,10 +1161,10 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-bb-api@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/bb-api/-/bb-api-1.0.11.tgz#c8ec1e2dc12eabc51f401aa5a7e728d4888c3768"
-  integrity sha512-JSodACitYa0SImJLw122h46+zRsMFZIFjR7qjJqEX27GWT/l7mUzw2zBuaPg8L+SbOT8pdOmMYRvCCpzEESSGQ==
+bb-api@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/bb-api/-/bb-api-1.0.12.tgz#6531193531e02848bb78bb238230d581e58b8812"
+  integrity sha512-3ajiDvhHtGgRh9phNat0MPBOMn03Bbcddtd2N4+dV/Bd46cRHitDkjE49wITiTaGaLbRXgGnIcVXQcu7VZEWbw==
   dependencies:
     node-fetch "^2.1.2"
 
@@ -5291,9 +5291,9 @@ yargs@^12.0.1:
     y18n "^3.2.1 || ^4.0.0"
     yargs-parser "^10.1.0"
 
-ynab@^0.16.0:
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/ynab/-/ynab-0.16.0.tgz#e686bea56d0ba07a986fbf72043e84db2de83fc6"
-  integrity sha512-MC5lp3NkNkqqkXhKce1ZXe0vYIYEWLOGb/IKEDrvlapUeHY/chIsJOKghV3ZwqrUGmfR7ZJ2S/TA6DbjF3ehrw==
+ynab@~1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/ynab/-/ynab-1.9.0.tgz#0e363aa738e5a3e659c3d397d2df625b47f7ca8b"
+  integrity sha512-0LmsQmiv6dTfXRwA/m3ndbbaGL7WKQdztcHTyZacSGFwS/dGSxMaMIVHh1QgpeGVuZrMNTCGRK/IYbdOX1JzQQ==
   dependencies:
     portable-fetch "^3.0.0"
