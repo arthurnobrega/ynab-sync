@@ -1,17 +1,22 @@
-import { askForBudget, askForAccount, askForConfirm } from './questions'
-import { getBudgets, getAccounts, importTransactions } from './middleware'
+import { askForBudget, askForAccount, askForConfirm } from './questions';
+import { getBudgets, getAccounts, importTransactions } from './middleware';
 
 export default async function executeYnabFlow(_action, transactions) {
   // TODO: also include login/token to YNAB
-  let { args, ...action } = _action
-  const budget = action.budget || await askForBudget(await getBudgets())
-  const account = action.account || await askForAccount(await getAccounts(budget.id))
+  // eslint-disable-next-line prefer-const
+  let { args, ...action } = _action;
+  const budget = action.budget || (await askForBudget(await getBudgets()));
+  const account =
+    action.account || (await askForAccount(await getAccounts(budget.id)));
 
-  action = { ...action, budget, account }
-  const confirm = (args && args.yesToAllOnce) ? true : await askForConfirm(action, transactions)
+  action = { ...action, budget, account };
+  const confirm =
+    args && args.yesToAllOnce
+      ? true
+      : await askForConfirm(action, transactions);
 
   if (!confirm) {
-    return null
+    return null;
   }
 
   const parsedTransactions = transactions.map(transaction => ({
@@ -19,14 +24,14 @@ export default async function executeYnabFlow(_action, transactions) {
     approved: false,
     cleared: 'cleared',
     account_id: action.account.id,
-  }))
+  }));
 
   try {
-    await importTransactions(action.budget.id, parsedTransactions)
+    await importTransactions(action.budget.id, parsedTransactions);
   } catch (e) {
-    console.log(e)
-    return null
+    console.log(e);
+    return null;
   }
 
-  return action
+  return action;
 }

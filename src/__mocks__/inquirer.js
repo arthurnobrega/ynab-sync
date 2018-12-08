@@ -1,6 +1,6 @@
-import ynabBudgets from './data/ynabBudgets.json'
-import ynabAccounts from './data/ynabAccounts.json'
-import savedActions from './data/savedActions.json'
+import ynabBudgets from './data/ynabBudgets.json';
+import ynabAccounts from './data/ynabAccounts.json';
+import savedActions from './data/savedActions.json';
 
 export default {
   prompt: ([{ name }]) => {
@@ -13,45 +13,45 @@ export default {
             name: 'Nubank Credit Card',
             execute: () => {},
           },
-        }
+        };
       case 'actionType':
-        return { actionType: 'NEW' }
+        return { actionType: 'NEW' };
       case 'actionsToRun':
-        return { actionsToRun: [savedActions[0]] }
+        return { actionsToRun: [savedActions[0]] };
       case 'actionsToDelete':
-        return { actionsToDelete: [savedActions[1]] }
+        return { actionsToDelete: [savedActions[1]] };
       case 'save':
-        return { save: true }
+        return { save: true };
 
       // BB
       case 'bbBranch':
-        return { bbBranch: '12345' }
+        return { bbBranch: '12345' };
       case 'bbAccount':
-        return { bbAccount: '123456' }
+        return { bbAccount: '123456' };
       case 'bbPassword':
-        return { bbPassword: '12345678' }
+        return { bbPassword: '12345678' };
       case 'bbFilter':
-        return { bbFilter: '2018-01' }
+        return { bbFilter: '2018-01' };
 
       // Nubank
       case 'username':
-        return { username: '45678932158' }
+        return { username: '45678932158' };
       case 'password':
-        return { password: '123456' }
+        return { password: '123456' };
       case 'filter':
-        return { filter: '2018-01' }
+        return { filter: '2018-01' };
 
       // YNAB
       case 'budget':
-        return { budget: ynabBudgets.data.budgets[0] }
+        return { budget: ynabBudgets.data.budgets[0] };
       case 'account':
-        return { account: ynabAccounts.data.accounts[0] }
+        return { account: ynabAccounts.data.accounts[0] };
       case 'confirm':
-        return { confirm: true }
+        return { confirm: true };
 
       default:
-        return null
+        return null;
     }
   },
   Separator: () => '',
-}
+};

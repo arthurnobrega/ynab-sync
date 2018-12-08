@@ -1,15 +1,14 @@
-import lowdb from 'lowdb'
-import FileSync from 'lowdb/adapters/FileSync'
+import lowdb from 'lowdb';
+import FileSync from 'lowdb/adapters/FileSync';
 
-const adapter = new FileSync('db.json')
-const db = lowdb(adapter)
+const adapter = new FileSync('db.json');
+const db = lowdb(adapter);
 
 export function initializeDb() {
   db.defaults({
     nubankTokens: [],
     favoriteActions: [],
-  })
-    .write()
+  }).write();
 }
 
-export default db
+export default db;
