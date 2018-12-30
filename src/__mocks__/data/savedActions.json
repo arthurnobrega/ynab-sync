@@ -3,7 +3,8 @@
     "id": 1525841807788,
     "when": 1525841807788,
     "flow": {
-      "id": "nubank-card",
+      "id": "nubank",
+      "type": "credit-card",
       "name": "Nubank Credit Card"
     },
     "username": "123456789",
@@ -23,17 +24,17 @@
       "name": "My Budget",
       "last_modified_on": "2018-05-07T23:43:45+00:00",
       "date_format": {
-          "format": "DD/MM/YYYY"
+        "format": "DD/MM/YYYY"
       },
       "currency_format": {
-          "iso_code": "BRL",
-          "example_format": "123.456,78",
-          "decimal_digits": 2,
-          "decimal_separator": ",",
-          "symbol_first": true,
-          "group_separator": ".",
-          "currency_symbol": "R$",
-          "display_symbol": true
+        "iso_code": "BRL",
+        "example_format": "123.456,78",
+        "decimal_digits": 2,
+        "decimal_separator": ",",
+        "symbol_first": true,
+        "group_separator": ".",
+        "currency_symbol": "R$",
+        "display_symbol": true
       },
       "first_month": "2015-06-01",
       "last_month": "2018-05-01"
@@ -44,7 +45,8 @@
     "when": 1525841827136,
     "username": "987654321",
     "flow": {
-      "id": "nubank-account",
+      "id": "nubank",
+      "type": "checking",
       "name": "Nubank Account"
     },
     "account": {
@@ -63,17 +65,17 @@
       "name": "My Budget (Archived on 2018-04-01)",
       "last_modified_on": "2018-04-01T23:54:07+00:00",
       "date_format": {
-          "format": "DD/MM/YYYY"
+        "format": "DD/MM/YYYY"
       },
       "currency_format": {
-          "iso_code": "BRL",
-          "example_format": "123.456,78",
-          "decimal_digits": 2,
-          "decimal_separator": ",",
-          "symbol_first": true,
-          "group_separator": ".",
-          "currency_symbol": "R$",
-          "display_symbol": true
+        "iso_code": "BRL",
+        "example_format": "123.456,78",
+        "decimal_digits": 2,
+        "decimal_separator": ",",
+        "symbol_first": true,
+        "group_separator": ".",
+        "currency_symbol": "R$",
+        "display_symbol": true
       },
       "first_month": "2017-10-01",
       "last_month": "2018-05-01"
@@ -83,6 +85,7 @@
   {
     "flow": {
       "id": "bb",
+      "type": "checking",
       "name": "Banco do Brasil"
     },
     "balance": 0,

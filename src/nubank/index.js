@@ -140,9 +140,9 @@ export default async function executeNubankFlow(_action = {}) {
   }
 
   let response = null;
-  if (action.flow.id === 'nubank-card') {
+  if (action.flow.type === 'credit-card') {
     response = await getNubankCardData(args);
-  } else if (action.flow.id === 'nubank-account') {
+  } else if (action.flow.type === 'checking') {
     response = await getNubankAccountData();
   }
 

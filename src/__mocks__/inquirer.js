@@ -9,7 +9,8 @@ export default {
       case 'flow':
         return {
           flow: {
-            id: 'nubank-card',
+            id: 'nubank',
+            type: 'credit-card',
             name: 'Nubank Credit Card',
             execute: () => {},
           },

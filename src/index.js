@@ -36,7 +36,7 @@ export async function executeAction({ action, args }) {
 
   const { transactions, ...remainingProps } = await flow.execute({
     ...action,
-    flow: flow,
+    flow,
     args: {
       ...args,
       password: args ? args[flow.passwordCommand] : '',

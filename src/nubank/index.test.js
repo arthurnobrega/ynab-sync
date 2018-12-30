@@ -5,7 +5,8 @@ import savedActions from '../__mocks__/data/savedActions.json';
 describe('Nubank card flow', () => {
   test('should return array of transactions in correct form', async () => {
     const flow = {
-      id: 'nubank-card',
+      id: 'nubank',
+      type: 'credit-card',
       name: 'Nubank Credit Card',
       execute: executeNubankFlow,
     };

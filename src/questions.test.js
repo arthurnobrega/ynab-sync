@@ -9,11 +9,12 @@ import savedActions from './__mocks__/data/savedActions.json';
 import FLOWS from './flows';
 
 describe('Main questions', () => {
-  test('should select nubank flow type', async () => {
-    const type = await askForFlowType(FLOWS);
+  test('should select nubank flow', async () => {
+    const flow = await askForFlowType(FLOWS);
 
-    expect(type).toHaveProperty('id');
-    expect(type.id).toBe('nubank-card');
+    expect(flow).toHaveProperty('id');
+    expect(flow.id).toBe('nubank');
+    expect(flow.type).toBe('credit-card');
   });
 
   test('should return action type NEW', async () => {
