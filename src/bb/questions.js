@@ -88,3 +88,16 @@ export async function askForFilter() {
 
   return filter;
 }
+
+export async function askForSavingsAccount(accounts) {
+  const { bbSavingsAccount } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'bbSavingsAccount',
+      message: 'Select the savings account:',
+      choices: accounts.map(a => ({ value: a, name: a.description })),
+    },
+  ]);
+
+  return bbSavingsAccount;
+}

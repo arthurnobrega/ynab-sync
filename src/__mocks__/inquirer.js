@@ -3,7 +3,7 @@ import ynabAccounts from './data/ynabAccounts.json';
 import savedActions from './data/savedActions.json';
 
 export default {
-  prompt: ([{ name }]) => {
+  prompt: ([{ name, choices }]) => {
     switch (name) {
       // Main
       case 'flow':
@@ -33,6 +33,8 @@ export default {
         return { bbPassword: '12345678' };
       case 'bbFilter':
         return { bbFilter: '2018-01' };
+      case 'bbSavingsAccount':
+        return { bbSavingsAccount: choices[0].value };
 
       // Nubank
       case 'username':

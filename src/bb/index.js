@@ -5,11 +5,13 @@ import {
   askForPassword,
   defaultFilter,
   askForFilter,
+  askForSavingsAccount,
 } from './questions';
 
 const bb = new BB();
 
-async function getTransactionsFromDate({ flow, filter }) {
+async function getTransactionsFromDate({ action, filter }) {
+  const { flow } = action;
   const [year, month] = filter.split('-');
 
   let response = null;
@@ -20,8 +22,9 @@ async function getTransactionsFromDate({ flow, filter }) {
     });
   } else if (flow.type === 'savings') {
     const savingsAccounts = await bb.savings.getAccounts();
+    const savingsAccount = await askForSavingsAccount(savingsAccounts);
 
-    response = await savingsAccounts[0].getTransactions({
+    response = await savingsAccount.getTransactions({
       year,
       month,
     });
@@ -62,14 +65,10 @@ export default async function executeBBFlow({ args = null, ...action }) {
     filters.push(await askForFilter());
   }
 
-  console.log({ filters });
-
   await bb.login({ ...username, password });
 
   const transactions = (await Promise.all(
-    filters.map(filter =>
-      getTransactionsFromDate({ flow: action.flow, filter }),
-    ),
+    filters.map(filter => getTransactionsFromDate({ action, filter })),
   )).reduce((acc, item) => acc.concat(item), []);
 
   const balance = await bb.checking.getBalance();
