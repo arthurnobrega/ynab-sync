@@ -32,7 +32,7 @@ const { argv } = yargs
 
 export async function executeAction({ action, args }) {
   let flow = (action && action.flow) || (await askForFlowType(FLOWS));
-  flow = FLOWS.find(f => f.id === flow.id);
+  flow = FLOWS.find(f => f.id === flow.id && f.type === flow.type);
 
   const { transactions, ...remainingProps } = await flow.execute({
     ...action,
@@ -89,7 +89,7 @@ async function executeActionArray({ actions, args }) {
   return result;
 }
 
-export default async function main({ actionType = null, args = {} }) {
+export default async function main({ actionType = null, args = {} } = {}) {
   if (!process.env.YNAB_TOKEN) {
     console.log(chalk.red('Set your YNAB_TOKEN. Please read the README.md.'));
     return false;
