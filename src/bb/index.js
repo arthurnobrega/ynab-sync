@@ -12,7 +12,7 @@ const bb = new BB();
 async function processBBDate(filter) {
   const filterParts = filter.split('-');
 
-  const response = await bb.getTransactions({
+  const response = await bb.checking.getTransactions({
     year: filterParts[0],
     month: filterParts[1],
   });
@@ -52,7 +52,7 @@ export default async function executeBBFlow(_action = {}) {
 
   const transactions = result.reduce((acc, item) => acc.concat(item), []);
 
-  const balance = await bb.getBalance();
+  const balance = await bb.checking.getBalance();
   return {
     ...action,
     balance,

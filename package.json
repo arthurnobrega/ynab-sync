@@ -9,7 +9,7 @@
     "prepublish": "yarn run build",
     "build": "babel src -d dist --ignore **/*.test.js,__mocks__",
     "start": "yarn build && node dist/index.js",
-    "test": "jest",
+    "test": "jest ./src",
     "lint": "eslint ./src"
   },
   "engines": {
