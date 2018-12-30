@@ -36,7 +36,7 @@ export async function executeAction({ action, args }) {
 
   const { transactions, ...remainingProps } = await flow.execute({
     ...action,
-    flow,
+    flowType: flow,
     args: {
       ...args,
       password: args ? args[flow.passwordCommand] : '',
@@ -89,16 +89,16 @@ async function executeActionArray({ actions, args }) {
   return result;
 }
 
-export default async function main({ args = {} }) {
+export default async function main({ actionType = null, args = {} }) {
   if (!process.env.YNAB_TOKEN) {
     console.log(chalk.red('Set your YNAB_TOKEN. Please read the README.md.'));
-    return;
+    return false;
   }
 
-  const initialCustomType = args.yesToAllOnce ? 'FAVORITE' : null;
-  const actionType = initialCustomType || (await askForActionType());
+  const initialActionType = args.yesToAllOnce ? 'FAVORITE' : actionType;
+  const runActionType = initialActionType || (await askForActionType());
 
-  switch (actionType) {
+  switch (runActionType) {
     case 'NEW':
       await executeAction({ args });
 
