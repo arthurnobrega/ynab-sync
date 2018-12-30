@@ -53,5 +53,5 @@ export default {
         return null;
     }
   },
-  Separator: () => '',
+  Separator: class {},
 };

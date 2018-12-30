@@ -143,6 +143,8 @@ export default async function main({ args = {} }) {
 
     default:
   }
+
+  return false;
 }
 
 // Run main if it was called by shell
