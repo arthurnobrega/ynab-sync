@@ -2,13 +2,13 @@ import inquirer from 'inquirer';
 import executeNubankFlow from '../nubank';
 import executeBBFlow from '../bb';
 import executeYnabFlow from '.';
-import { FLOWTYPES } from '..';
+import FLOWS from '../flows';
 import savedActions from '../__mocks__/data/savedActions.json';
 
 describe('YNAB flow', () => {
   test('should return action object for nubank credit card flow', async () => {
     const { transactions, ...remainingProps } = await executeNubankFlow({
-      flowType: FLOWTYPES[0],
+      flowType: FLOWS[0],
     });
     const action = await executeYnabFlow(remainingProps, transactions);
 
@@ -24,7 +24,7 @@ describe('YNAB flow', () => {
 
   test('should return action object for nubank account flow', async () => {
     const { transactions, ...remainingProps } = await executeNubankFlow({
-      flowType: FLOWTYPES[1],
+      flowType: FLOWS[1],
     });
     const action = await executeYnabFlow(remainingProps, transactions);
 
@@ -40,7 +40,7 @@ describe('YNAB flow', () => {
 
   test('should return action object for bb flow', async () => {
     const { transactions, ...remainingProps } = await executeBBFlow({
-      flowType: FLOWTYPES[2],
+      flowType: FLOWS[2],
     });
     const action = await executeYnabFlow(remainingProps, transactions);
 

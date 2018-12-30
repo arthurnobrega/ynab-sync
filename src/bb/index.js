@@ -9,35 +9,25 @@ import {
 
 const bb = new BB();
 
-async function processBBData(date) {
-  const filterParts = date.split('-');
+async function processBBDate(filter) {
+  const filterParts = filter.split('-');
 
-  let response = await bb.getTransactions({
+  const response = await bb.getTransactions({
     year: filterParts[0],
     month: filterParts[1],
   });
-  if (response.length === 0) {
-    // try again - paliativo pq a primeira consulta do BB agora retorna uma mensagem de alerta
-    // 'Esta versão do aplicativo não será mais suportada ....'
-    response = await bb.getTransactions({
-      year: filterParts[0],
-      month: filterParts[1],
-    });
-  }
 
-  const transactions = response.map(transaction => {
+  return response.map(transaction => {
     const { description: memo, date, amount: sourceAmount } = transaction;
     const amount = parseInt(sourceAmount * 1000, 10);
 
     return {
       date,
       memo,
-      amount,
+      amount: parseInt(sourceAmount * 1000, 10),
       import_id: md5(JSON.stringify({ date, memo, amount })),
     };
   });
-
-  return transactions;
 }
 
 export default async function executeBBFlow(_action = {}) {
@@ -58,7 +48,7 @@ export default async function executeBBFlow(_action = {}) {
 
   await bb.login({ ...username, password });
 
-  const result = await Promise.all(filters.map(date => processBBData(date)));
+  const result = await Promise.all(filters.map(date => processBBDate(date)));
 
   const transactions = result.reduce((acc, item) => acc.concat(item), []);
 

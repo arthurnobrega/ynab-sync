@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import { distanceInWords } from 'date-fns';
+import { formatAction } from './helpers';
 
 export async function askForFlowType(flowTypes) {
   const { flowType } = await inquirer.prompt([
@@ -32,22 +33,6 @@ export async function askForActionType() {
   return actionType;
 }
 
-export function describeUsername(username) {
-  let usernameText;
-  if (typeof username === 'object') {
-    usernameText = Object.values(username).join(' / ');
-  } else {
-    usernameText = username;
-  }
-  return usernameText;
-}
-
-function describeAction(action) {
-  return `${action.flowType.name} ${describeUsername(
-    action.username,
-  )} => YNAB ${action.account.name} (${action.budget.name})`;
-}
-
 function actionsToChoices(actions, checked = true) {
   const now = new Date();
   let dateSeparator;
@@ -65,7 +50,7 @@ function actionsToChoices(actions, checked = true) {
       accumulator.push({
         value: action,
         checked,
-        name: describeAction(action),
+        name: formatAction(action),
       });
 
       return accumulator;

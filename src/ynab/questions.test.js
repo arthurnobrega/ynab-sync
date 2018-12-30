@@ -2,7 +2,7 @@ import { askForBudget, askForAccount, askForConfirm } from './questions';
 import budgets from '../__mocks__/data/ynabBudgets.json';
 import accounts from '../__mocks__/data/ynabAccounts.json';
 import transactions from '../__mocks__/data/ynabTransactions.json';
-import { FLOWTYPES } from '..';
+import FLOWS from '../flows';
 
 describe('YNAB questions', () => {
   test('should return budget', async () => {
@@ -29,7 +29,7 @@ describe('YNAB questions', () => {
       {
         account,
         budget,
-        flowType: FLOWTYPES[0],
+        flowType: FLOWS[0],
       },
       transactions.data.transactions,
     );

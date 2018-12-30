@@ -80,6 +80,7 @@ export async function askForFilter() {
         if (isFuture(parsedAnswer)) {
           return "That's in the future, no time travels allowed, try again";
         }
+
         return true;
       },
     },

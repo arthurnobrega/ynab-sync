@@ -6,11 +6,11 @@ import {
   askForSavedActionsToDelete,
 } from './questions';
 import savedActions from './__mocks__/data/savedActions.json';
-import { FLOWTYPES } from '.';
+import FLOWS from './flows';
 
 describe('Main questions', () => {
   test('should select nubank flow type', async () => {
-    const type = await askForFlowType(FLOWTYPES);
+    const type = await askForFlowType(FLOWS);
 
     expect(type).toHaveProperty('id');
     expect(type.id).toBe('nubank-card');
