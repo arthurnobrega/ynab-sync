@@ -62,6 +62,8 @@ export default async function executeBBFlow({ args = null, ...action }) {
     filters.push(await askForFilter());
   }
 
+  console.log({ filters });
+
   await bb.login({ ...username, password });
 
   const transactions = (await Promise.all(

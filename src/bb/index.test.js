@@ -1,6 +1,7 @@
 import inquirer from 'inquirer';
 import executeBBFlow from '.';
 import savedActions from '../__mocks__/data/savedActions.json';
+import { defaultFilter } from './questions';
 
 function getAction({ id, type }) {
   return savedActions.find(({ flow }) => flow.id === id && flow.type === type);
