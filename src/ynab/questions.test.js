@@ -29,7 +29,7 @@ describe('YNAB questions', () => {
       {
         account,
         budget,
-        flowType: FLOWS[0],
+        flow: FLOWS[0],
       },
       transactions.data.transactions,
     );

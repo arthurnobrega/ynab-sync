@@ -2,7 +2,7 @@
   {
     "id": 1525841807788,
     "when": 1525841807788,
-    "flowType": {
+    "flow": {
       "id": "nubank-card",
       "name": "Nubank Credit Card"
     },
@@ -43,7 +43,7 @@
     "id": 1525841827136,
     "when": 1525841827136,
     "username": "987654321",
-    "flowType": {
+    "flow": {
       "id": "nubank-account",
       "name": "Nubank Account"
     },
@@ -81,7 +81,7 @@
   },
 
   {
-    "flowType": {
+    "flow": {
       "id": "bb",
       "name": "Banco do Brasil"
     },

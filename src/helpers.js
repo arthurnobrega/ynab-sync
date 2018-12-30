@@ -9,16 +9,16 @@ export function formatUsername(username) {
   return username;
 }
 
-export function formatAction({ flowType, username, account, budget }) {
+export function formatAction({ flow, username, account, budget }) {
   const formattedUsername = formatUsername(username);
-  return `${flowType.name} ${formattedUsername} => YNAB ${account.name} (${
+  return `${flow.name} ${formattedUsername} => YNAB ${account.name} (${
     budget.name
   })`;
 }
 
 export function printBalance(action) {
   if (action.balance) {
-    const out = `${action.flowType.name} ${formatUsername(
+    const out = `${action.flow.name} ${formatUsername(
       action.username,
     )} balance: ${numeral(action.balance).format('$0,0.00')}`;
     const line = '='.repeat(out.length + 8);

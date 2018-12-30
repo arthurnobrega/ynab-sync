@@ -2,17 +2,17 @@ import inquirer from 'inquirer';
 import { distanceInWords } from 'date-fns';
 import { formatAction } from './helpers';
 
-export async function askForFlowType(flowTypes) {
-  const { flowType } = await inquirer.prompt([
+export async function askForFlowType(flows) {
+  const { flow } = await inquirer.prompt([
     {
       type: 'list',
-      name: 'flowType',
+      name: 'flow',
       message: 'Select an integration type:',
-      choices: flowTypes.map(value => ({ value, name: value.name })),
+      choices: flows.map(value => ({ value, name: value.name })),
     },
   ]);
 
-  return flowType;
+  return flow;
 }
 
 export async function askForActionType() {

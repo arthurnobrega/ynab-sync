@@ -4,12 +4,12 @@ import savedActions from '../__mocks__/data/savedActions.json';
 
 describe('Nubank card flow', () => {
   test('should return array of transactions in correct form', async () => {
-    const flowType = {
+    const flow = {
       id: 'nubank-card',
       name: 'Nubank Credit Card',
       execute: executeNubankFlow,
     };
-    const { username, transactions } = await executeNubankFlow({ flowType });
+    const { username, transactions } = await executeNubankFlow({ flow });
 
     expect(username).toEqual('45678932158');
     expect(transactions).toHaveLength(3);

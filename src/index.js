@@ -31,12 +31,12 @@ const { argv } = yargs
   });
 
 export async function executeAction({ action, args }) {
-  let flow = (action && action.flowType) || (await askForFlowType(FLOWS));
+  let flow = (action && action.flow) || (await askForFlowType(FLOWS));
   flow = FLOWS.find(f => f.id === flow.id);
 
   const { transactions, ...remainingProps } = await flow.execute({
     ...action,
-    flowType: flow,
+    flow: flow,
     args: {
       ...args,
       password: args ? args[flow.passwordCommand] : '',
@@ -73,7 +73,7 @@ export async function executeAction({ action, args }) {
     .push({
       ...actionOut,
       transactions: undefined,
-      flowType: { ...flow, execute: undefined },
+      flow: { ...flow, execute: undefined },
       when: new Date().getTime(),
     })
     .write();

@@ -6,9 +6,9 @@ export default {
   prompt: ([{ name }]) => {
     switch (name) {
       // Main
-      case 'flowType':
+      case 'flow':
         return {
-          flowType: {
+          flow: {
             id: 'nubank-card',
             name: 'Nubank Credit Card',
             execute: () => {},

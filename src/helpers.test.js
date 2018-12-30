@@ -11,7 +11,7 @@ describe('Global Helpers', () => {
   test('format action', () => {
     expect(
       formatAction({
-        flowType: { name: 'Banco do Brasil' },
+        flow: { name: 'Banco do Brasil' },
         username: { account: '123', branch: '1234' },
         account: { name: 'Conta Corrente BB' },
         budget: { name: 'Meu Budget' },

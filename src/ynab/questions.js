@@ -46,7 +46,7 @@ export async function askForConfirm(action, transactions) {
       name: 'confirm',
       message: `Do you confirm importing ${
         transactions.length
-      } transactions from ${action.flowType.name} ${usernameText} to YNAB ${
+      } transactions from ${action.flow.name} ${usernameText} to YNAB ${
         account.name
       } (${budget.name})?`,
       default: true,
