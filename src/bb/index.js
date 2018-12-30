@@ -9,13 +9,23 @@ import {
 
 const bb = new BB();
 
-async function processBBDate(filter) {
+async function getTransactionsFromDate({ flow, filter }) {
   const filterParts = filter.split('-');
 
-  const response = await bb.checking.getTransactions({
-    year: filterParts[0],
-    month: filterParts[1],
-  });
+  let response = null;
+  if (!flow.type || flow.type === 'checking') {
+    response = await bb.checking.getTransactions({
+      year: filterParts[0],
+      month: filterParts[1],
+    });
+  } else if (flow.type === 'savings') {
+    const savingsAccounts = await bb.savings.getAccounts();
+
+    response = await savingsAccounts[0].getTransactions({
+      year: filterParts[0],
+      month: filterParts[1],
+    });
+  }
 
   return response.map(transaction => {
     const { description: memo, date, amount: sourceAmount } = transaction;
@@ -30,8 +40,7 @@ async function processBBDate(filter) {
   });
 }
 
-export default async function executeBBFlow(_action = {}) {
-  const { args, ...action } = _action;
+export default async function executeBBFlow({ args = null, ...action }) {
   const username = action.username || (await askForUsername());
 
   const password = (args && args.password) || (await askForPassword(username));
@@ -48,9 +57,11 @@ export default async function executeBBFlow(_action = {}) {
 
   await bb.login({ ...username, password });
 
-  const result = await Promise.all(filters.map(date => processBBDate(date)));
-
-  const transactions = result.reduce((acc, item) => acc.concat(item), []);
+  const transactions = (await Promise.all(
+    filters.map(filter =>
+      getTransactionsFromDate({ flow: action.flow, filter }),
+    ),
+  )).reduce((acc, item) => acc.concat(item), []);
 
   const balance = await bb.checking.getBalance();
   return {

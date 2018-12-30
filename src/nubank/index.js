@@ -106,8 +106,7 @@ async function getNubankAccountData() {
   return { balance, transactions };
 }
 
-export default async function executeNubankFlow(_action = {}) {
-  const { args, ...action } = _action;
+export default async function executeNubankFlow({ args, ...action }) {
   const username = action.username || (await askForUsername());
 
   let record = db
