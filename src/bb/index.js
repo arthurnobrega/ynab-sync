@@ -10,21 +10,28 @@ import {
 const bb = new BB();
 
 async function getTransactionsFromDate({ flow, filter }) {
-  const filterParts = filter.split('-');
+  const [year, month] = filter.split('-');
 
   let response = null;
   if (!flow.type || flow.type === 'checking') {
     response = await bb.checking.getTransactions({
-      year: filterParts[0],
-      month: filterParts[1],
+      year,
+      month,
     });
   } else if (flow.type === 'savings') {
     const savingsAccounts = await bb.savings.getAccounts();
 
     response = await savingsAccounts[0].getTransactions({
-      year: filterParts[0],
-      month: filterParts[1],
+      year,
+      month,
     });
+  } else if (flow.type === 'credit-card') {
+    const creditCards = await bb.creditCard.getCards();
+    const creditCardBills = await creditCards[0]
+      .getBills()
+      .find(b => b.billDate.includes(`${month}${year}`));
+
+    response = await creditCardBills.getTransactions();
   }
 
   return response.map(transaction => {

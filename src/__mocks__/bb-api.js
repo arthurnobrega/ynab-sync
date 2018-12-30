@@ -49,24 +49,27 @@ export default function BB() {
         {
           getBills: () => [
             {
+              cardAccountNumber: '12345678',
+              billId: '123123123',
+              billDate: '25012018',
               getTransactions: () => [
                 {
                   type: 'payment',
-                  date: new Date(2018, 10, 1),
+                  date: new Date(2018, 0, 1),
                   description: 'Credit Card Transaction 1',
-                  amount: 1024.51,
+                  amount: 11.51,
                 },
                 {
                   type: 'atSight',
-                  date: new Date(2018, 10, 3),
+                  date: new Date(2018, 0, 3),
                   description: 'Credit Card Transaction 2',
-                  amount: -57.2,
+                  amount: -7.2,
                 },
                 {
                   type: 'installment',
-                  date: new Date(2018, 10, 5),
+                  date: new Date(2018, 0, 5),
                   description: 'Credit Card Transaction 3',
-                  amount: -98.31,
+                  amount: -8.31,
                 },
               ],
             },
