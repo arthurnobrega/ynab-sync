@@ -1,11 +1,4 @@
-import inquirer from 'inquirer';
 import executeBBFlow from '.';
-import savedActions from '../__mocks__/data/savedActions.json';
-import { defaultFilter } from './questions';
-
-function getAction({ id, type }) {
-  return savedActions.find(({ flow }) => flow.id === id && flow.type === type);
-}
 
 describe('BB flow', () => {
   beforeEach(() => {
@@ -36,20 +29,6 @@ describe('BB flow', () => {
         memo: 'Checking Transaction 1',
       });
     });
-
-    // test('executes bb action without questions', async () => {
-    //   const spy = jest.spyOn(inquirer, 'prompt');
-    //   const response = await executeBBFlow({
-    //     ...getAction({ id: 'bb', type: 'checking' }),
-    //     args: {
-    //       yesToAllOnce: true,
-    //       password: '123456',
-    //     },
-    //   });
-    //
-    //   expect(spy).not.toHaveBeenCalled();
-    //   expect(response).not.toHaveProperty('args');
-    // });
   });
 
   describe('Savings', () => {
@@ -76,20 +55,6 @@ describe('BB flow', () => {
         memo: 'Savings Transaction 1',
       });
     });
-
-    // test('executes bb action without questions', async () => {
-    //   const spy = jest.spyOn(inquirer, 'prompt');
-    //   const response = await executeBBFlow({
-    //     ...getAction({ id: 'bb', type: 'savings' }),
-    //     args: {
-    //       yesToAllOnce: true,
-    //       password: '123456',
-    //     },
-    //   });
-    //
-    //   expect(spy).not.toHaveBeenCalled();
-    //   expect(response).not.toHaveProperty('args');
-    // });
   });
 
   describe('Credit Card', () => {
@@ -116,23 +81,5 @@ describe('BB flow', () => {
         memo: 'Credit Card Transaction 1',
       });
     });
-
-    // test('executes bb action without questions', async () => {
-    //   jest.mock('./questions', () => ({
-    //     defaultFilter: () => '2018-01',
-    //   }));
-    //
-    //   const spy = jest.spyOn(inquirer, 'prompt');
-    //   const response = await executeBBFlow({
-    //     ...getAction({ id: 'bb', type: 'credit-card' }),
-    //     args: {
-    //       yesToAllOnce: true,
-    //       password: '123456',
-    //     },
-    //   });
-    //
-    //   expect(spy).not.toHaveBeenCalled();
-    //   expect(response).not.toHaveProperty('args');
-    // });
   });
 });
