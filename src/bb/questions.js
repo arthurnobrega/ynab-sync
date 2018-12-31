@@ -101,3 +101,19 @@ export async function askForSavingsAccount(accounts) {
 
   return bbSavingsAccount;
 }
+
+export async function askForCreditCard(creditCards) {
+  const { bbCreditCard } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'bbCreditCard',
+      message: 'Select the credit card:',
+      choices: creditCards.map(a => ({
+        value: a,
+        name: `${a.brand} - ${a.cardNumber}`,
+      })),
+    },
+  ]);
+
+  return bbCreditCard;
+}

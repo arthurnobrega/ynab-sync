@@ -35,6 +35,8 @@ export default {
         return { bbFilter: '2018-01' };
       case 'bbSavingsAccount':
         return { bbSavingsAccount: choices[0].value };
+      case 'bbCreditCard':
+        return { bbCreditCard: choices[0].value };
 
       // Nubank
       case 'username':

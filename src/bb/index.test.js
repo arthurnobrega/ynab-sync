@@ -37,19 +37,19 @@ describe('BB flow', () => {
       });
     });
 
-    test('executes bb action without questions', async () => {
-      const spy = jest.spyOn(inquirer, 'prompt');
-      const response = await executeBBFlow({
-        ...getAction({ id: 'bb', type: 'checking' }),
-        args: {
-          yesToAllOnce: true,
-          password: '123456',
-        },
-      });
-
-      expect(spy).not.toHaveBeenCalled();
-      expect(response).not.toHaveProperty('args');
-    });
+    // test('executes bb action without questions', async () => {
+    //   const spy = jest.spyOn(inquirer, 'prompt');
+    //   const response = await executeBBFlow({
+    //     ...getAction({ id: 'bb', type: 'checking' }),
+    //     args: {
+    //       yesToAllOnce: true,
+    //       password: '123456',
+    //     },
+    //   });
+    //
+    //   expect(spy).not.toHaveBeenCalled();
+    //   expect(response).not.toHaveProperty('args');
+    // });
   });
 
   describe('Savings', () => {
@@ -77,19 +77,19 @@ describe('BB flow', () => {
       });
     });
 
-    test('executes bb action without questions', async () => {
-      const spy = jest.spyOn(inquirer, 'prompt');
-      const response = await executeBBFlow({
-        ...getAction({ id: 'bb', type: 'savings' }),
-        args: {
-          yesToAllOnce: true,
-          password: '123456',
-        },
-      });
-
-      expect(spy).not.toHaveBeenCalled();
-      expect(response).not.toHaveProperty('args');
-    });
+    // test('executes bb action without questions', async () => {
+    //   const spy = jest.spyOn(inquirer, 'prompt');
+    //   const response = await executeBBFlow({
+    //     ...getAction({ id: 'bb', type: 'savings' }),
+    //     args: {
+    //       yesToAllOnce: true,
+    //       password: '123456',
+    //     },
+    //   });
+    //
+    //   expect(spy).not.toHaveBeenCalled();
+    //   expect(response).not.toHaveProperty('args');
+    // });
   });
 
   describe('Credit Card', () => {

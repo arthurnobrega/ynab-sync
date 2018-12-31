@@ -3,6 +3,7 @@ import {
   askForPassword,
   askForFilter,
   askForSavingsAccount,
+  askForCreditCard,
 } from './questions';
 
 describe('BB questions', () => {
@@ -42,6 +43,31 @@ describe('BB questions', () => {
     expect(savingsAccount).toMatchObject({
       variation: 1,
       description: 'Poupança Ouro - Variação 1',
+    });
+  });
+
+  test('returns specific credit card', async () => {
+    const creditCards = [
+      {
+        brand: 'VISA',
+        modality: '74',
+        cardAccountNumber: '12345678',
+        cardNumber: '0000123456781111',
+      },
+      {
+        brand: 'VISA',
+        modality: '1',
+        cardAccountNumber: '12345679',
+        cardNumber: '0000123456781112',
+      },
+    ];
+    const creditCard = await askForCreditCard(creditCards);
+
+    expect(creditCard).toMatchObject({
+      brand: 'VISA',
+      modality: '74',
+      cardAccountNumber: '12345678',
+      cardNumber: '0000123456781111',
     });
   });
 });
