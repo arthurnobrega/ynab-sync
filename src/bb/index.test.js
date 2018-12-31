@@ -31,8 +31,8 @@ describe('BB flow', () => {
       expect(transactions).toHaveLength(3);
       expect(transactions[0]).toMatchObject({
         amount: 1024510,
-        date: new Date('2018-01-01T02:00:00.000Z'),
-        import_id: '588ce4ad79757b8ec4c432e8586b1aba',
+        date: new Date('2018-01-01T00:00:00Z'),
+        import_id: 'b88d56ca71621022bcfae1588ce3ef11',
         memo: 'Checking Transaction 1',
       });
     });
@@ -71,8 +71,8 @@ describe('BB flow', () => {
       expect(transactions).toHaveLength(3);
       expect(transactions[0]).toMatchObject({
         amount: 10510,
-        date: new Date('2018-01-01T02:00:00.000Z'),
-        import_id: 'eb90c2bcc88d799664e1bea2bb009bd6',
+        date: new Date('2018-01-01T00:00:00Z'),
+        import_id: '1620f8dfa0bc0c673f49579ec9acb870',
         memo: 'Savings Transaction 1',
       });
     });
@@ -111,8 +111,8 @@ describe('BB flow', () => {
       expect(transactions).toHaveLength(3);
       expect(transactions[0]).toMatchObject({
         amount: 11510,
-        date: new Date('2018-01-01T02:00:00.000Z'),
-        import_id: '7830f3e2396f58200ff6f1a0ebe3682e',
+        date: new Date('2018-01-01T00:00:00Z'),
+        import_id: 'cffaffd717c3fbdc04d261f978cb7e49',
         memo: 'Credit Card Transaction 1',
       });
     });
