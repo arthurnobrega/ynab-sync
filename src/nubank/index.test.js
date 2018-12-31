@@ -1,39 +1,40 @@
-import inquirer from 'inquirer'
-import executeNubankFlow from '.'
-import savedActions from '../__mocks__/data/savedActions.json'
+import inquirer from 'inquirer';
+import executeNubankFlow from '.';
+import savedActions from '../__mocks__/data/savedActions.json';
 
 describe('Nubank card flow', () => {
-  it('should return array of transactions in correct form', async () => {
-    const flowType = {
-      id: 'nubank-card',
+  test('should return array of transactions in correct form', async () => {
+    const flow = {
+      id: 'nubank',
+      type: 'credit-card',
       name: 'Nubank Credit Card',
       execute: executeNubankFlow,
-    }
-    const { username, transactions } = await executeNubankFlow({ flowType })
+    };
+    const { username, transactions } = await executeNubankFlow({ flow });
 
-    expect(username).toEqual('45678932158')
-    expect(transactions.length).toEqual(3)
-    expect(transactions[0]).toHaveProperty('import_id')
-    expect(transactions[0]).toHaveProperty('amount')
-    expect(transactions[0]).toHaveProperty('date')
-    expect(transactions[0]).toHaveProperty('memo')
-  })
+    expect(username).toEqual('45678932158');
+    expect(transactions).toHaveLength(3);
+    expect(transactions[0]).toHaveProperty('import_id');
+    expect(transactions[0]).toHaveProperty('amount');
+    expect(transactions[0]).toHaveProperty('date');
+    expect(transactions[0]).toHaveProperty('memo');
+  });
 
-  it('should execute nubank credit card action without questions', async () => {
-    const spy = jest.spyOn(inquirer, 'prompt')
+  test('should execute nubank credit card action without questions', async () => {
+    const spy = jest.spyOn(inquirer, 'prompt');
     const response = await executeNubankFlow({
       ...savedActions[0],
       args: {
         yesToAllOnce: true,
         password: '123456',
       },
-    })
+    });
 
-    expect(spy).not.toHaveBeenCalled()
-    expect(response).not.toHaveProperty('args')
-  })
+    expect(spy).not.toHaveBeenCalled();
+    expect(response).not.toHaveProperty('args');
+  });
 
-  // it('should execute nubank account action without questions', async () => {
+  // test('should execute nubank account action without questions', async () => {
   //   const spy = jest.spyOn(inquirer, 'prompt')
   //   const response = await executeNubankFlow({
   //     ...savedActions[1],
@@ -46,4 +47,4 @@ describe('Nubank card flow', () => {
   //   expect(spy).not.toHaveBeenCalled()
   //   expect(response).not.toHaveProperty('args')
   // })
-})
+});

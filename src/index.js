@@ -1,191 +1,161 @@
-import chalk from 'chalk'
-import numeral from 'numeral'
-import 'yargs'
-import executeYnabFlow from './ynab'
-import executeNubankFlow from './nubank'
-import executeBBFlow from './bb'
-import db, { initializeDb } from './db'
-import { askForFlowType, askForActionType, askForSavedActionsToRun, askToSaveAction, askForSavedActionsToDelete, describeUsername } from './questions'
+import chalk from 'chalk';
+import yargs from 'yargs';
+import executeYnabFlow from './ynab';
+import db, { initializeDb } from './db';
+import FLOWS from './flows';
+import { printBalance } from './helpers';
+import {
+  askForFlowType,
+  askForActionType,
+  askForSavedActionsToRun,
+  askToSaveAction,
+  askForSavedActionsToDelete,
+} from './questions';
 
-initializeDb()
+initializeDb();
 
-export const FLOWTYPES = [
-  {
-    id: 'nubank-card',
-    name: 'Nubank Credit Card',
-    execute: executeNubankFlow,
-    passwordCommand: 'nubankPassword',
-  },
-  {
-    id: 'nubank-account',
-    name: 'NuConta',
-    execute: executeNubankFlow,
-    passwordCommand: 'nubankPassword',
-  },
-  {
-    id: 'bb',
-    name: 'Banco do Brasil',
-    execute: executeBBFlow,
-    passwordCommand: 'bbPassword',
-  },
-]
+const { argv } = yargs
+  .option('bbPassword', {
+    default: '',
+  })
+  .option('nubankPassword', {
+    default: '',
+  })
+  .option('yesToAllOnce', {
+    alias: 'y',
+    default: false,
+  })
+  .option('syncLastTwoMonths', {
+    alias: 'fullSync',
+    default: false,
+  });
 
-function printBalance(action) {
-  if (action.balance) {
-    const out = `${action.flowType.name} ${describeUsername(action.username)} balance: ${numeral(action.balance).format('$0,0.00')}`
-    const line = '='.repeat(out.length + 8)
-    console.log(' ')
-    console.log(chalk.green(line))
-    console.log(' ')
-    console.log(chalk.green(`==  ${out}  ==`))
-    console.log(' ')
-    console.log(chalk.green(line))
-    console.log(' ')
-  }
-}
+export async function executeAction({ action, args }) {
+  let flow = (action && action.flow) || (await askForFlowType(FLOWS));
+  flow = FLOWS.find(f => f.id === flow.id && f.type === flow.type);
 
-export async function executeAction(params = {}) {
-  const { action, args } = params
-
-  let flowType = (action && action.flowType) || await askForFlowType(FLOWTYPES)
-  flowType = FLOWTYPES.find(flowT => flowT.id === flowType.id)
-
-  const { transactions, ...remainingProps } = await flowType.execute({
+  const { transactions, ...remainingProps } = await flow.execute({
     ...action,
-    flowType,
+    flow,
     args: {
       ...args,
-      password: args ? args[flowType.passwordCommand] : '',
+      password: args ? args[flow.passwordCommand] : '',
     },
-  })
-  let actionOut = await executeYnabFlow({ ...remainingProps, args }, transactions)
+  });
+  let actionOut = await executeYnabFlow(
+    { ...remainingProps, args },
+    transactions,
+  );
 
   if (!actionOut) {
-    return false
+    return false;
   }
 
-  printBalance(actionOut)
+  printBalance(actionOut);
 
   if (!actionOut.id) {
-    const save = await askToSaveAction()
+    const save = await askToSaveAction();
 
     if (!save) {
-      return false
+      return false;
     }
   }
 
   if (actionOut.id) {
     db.get('favoriteActions')
       .remove({ id: action.id })
-      .write()
+      .write();
   } else {
-    actionOut = { ...actionOut, id: new Date().getTime() }
+    actionOut = { ...actionOut, id: new Date().getTime() };
   }
 
   db.get('favoriteActions')
     .push({
       ...actionOut,
       transactions: undefined,
-      flowType: { ...flowType, execute: undefined },
+      flow: { ...flow, execute: undefined },
       when: new Date().getTime(),
     })
-    .write()
+    .write();
 
-  return true
+  return true;
 }
 
 async function executeActionArray({ actions, args }) {
-  let result = Promise.resolve()
-  actions.forEach((action) => {
-    result = result.then(() => executeAction({ action, args }))
-  })
-  return result
+  let result = Promise.resolve();
+  actions.forEach(action => {
+    result = result.then(() => executeAction({ action, args }));
+  });
+  return result;
 }
 
-async function main(params = {}) {
+export default async function main({ actionType = null, args = {} } = {}) {
   if (!process.env.YNAB_TOKEN) {
-    console.log(chalk.red('You need to set YNAB_TOKEN environment variable. Please read the README.md.'))
-    return false
+    console.log(chalk.red('Set your YNAB_TOKEN. Please read the README.md.'));
+    return false;
   }
 
-  const savedActions = db
-    .get('favoriteActions')
-    .value()
+  const initialActionType = args.yesToAllOnce ? 'FAVORITE' : actionType;
+  const runActionType = initialActionType || (await askForActionType());
 
-  const { args } = params
-  const actionType = params.actionType || await askForActionType()
-  switch (actionType) {
+  switch (runActionType) {
     case 'NEW':
-      await executeAction({ args })
+      await executeAction({ args });
 
-      if (!args || !args.yesToAllOnce) {
-        main()
+      if (!args.yesToAllOnce) {
+        main();
       }
 
-      break
+      break;
 
     case 'FAVORITE': {
-      const actions = (args && args.yesToAllOnce) ? savedActions
-        : await askForSavedActionsToRun(savedActions)
-      await executeActionArray({ actions, args })
+      const savedActions = db.get('favoriteActions').value();
 
-      if (!args || !args.yesToAllOnce) {
-        main()
+      const actions =
+        args && args.yesToAllOnce
+          ? savedActions
+          : await askForSavedActionsToRun(savedActions);
+      await executeActionArray({ actions, args });
+
+      if (!args.yesToAllOnce) {
+        main();
       }
 
-      break
+      break;
     }
 
     case 'DELETE': {
-      const actions = await askForSavedActionsToDelete(savedActions)
-      actions.forEach((favoriteAction) => {
+      const savedActions = db.get('favoriteActions').value();
+
+      const actions = await askForSavedActionsToDelete(savedActions);
+      actions.forEach(favoriteAction => {
         db.get('favoriteActions')
           .remove({ id: favoriteAction.id })
-          .write()
-      })
+          .write();
+      });
 
-      if (!args || !args.yesToAllOnce) {
-        main()
+      if (!args.yesToAllOnce) {
+        main();
       }
 
-      break
+      break;
     }
 
     default:
-      return false
   }
 
-  return true
+  return false;
 }
-
-export { main as default }
 
 // Run main if it was called by shell
 if (require.main === module) {
-  const args = require('yargs') // eslint-disable-line
-    .option('bbPassword', {
-      default: '',
-    })
-    .option('nubankPassword', {
-      default: '',
-    })
-    .option('yesToAllOnce', {
-      alias: 'y',
-      default: false,
-    })
-    .option('syncLastTwoMonths', {
-      alias: 'fullSync',
-      default: false,
-    })
-    .argv
-
-  if (args.syncLastTwoMonths) {
-    args.yesToAllOnce = true
+  if (argv.syncLastTwoMonths) {
+    argv.yesToAllOnce = true;
   }
 
-  if (args.yesToAllOnce) {
-    main({ args, actionType: 'FAVORITE' })
+  if (argv.yesToAllOnce) {
+    main({ args: argv });
   } else {
-    main()
+    main();
   }
 }

@@ -1,28 +1,34 @@
-import { API } from 'ynab'
+import { API } from 'ynab';
 
-const ynabAPI = new API(process.env.YNAB_TOKEN)
+const ynabAPI = new API(process.env.YNAB_TOKEN);
 
 export async function getBudgets() {
-  const budgetsResponse = await ynabAPI.budgets.getBudgets()
-  const { budgets } = budgetsResponse.data
+  const budgetsResponse = await ynabAPI.budgets.getBudgets();
+  const { budgets } = budgetsResponse.data;
 
-  return budgets
+  return budgets;
 }
 
 export async function getAccounts(budgetId) {
-  const accountsResponse = await ynabAPI.accounts.getAccounts(budgetId)
-  const { accounts } = accountsResponse.data
+  const accountsResponse = await ynabAPI.accounts.getAccounts(budgetId);
+  const { accounts } = accountsResponse.data;
 
-  return accounts
+  return accounts;
 }
 
 export async function importTransactions(budgetId, transactions) {
+  if (!transactions) {
+    return {};
+  }
+
   // Remove future transactions
-  const filteredTransactions = transactions.filter(t => new Date(t.date) < new Date())
+  const filteredTransactions = transactions.filter(
+    t => new Date(t.date) < new Date(),
+  );
 
   const response = await ynabAPI.transactions.bulkCreateTransactions(budgetId, {
     transactions: filteredTransactions,
-  })
+  });
 
-  return response
+  return response;
 }
