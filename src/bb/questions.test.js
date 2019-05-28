@@ -4,6 +4,7 @@ import {
   askForFilter,
   askForSavingsAccount,
   askForCreditCard,
+  askForBill,
 } from './questions';
 
 describe('BB questions', () => {
@@ -68,6 +69,29 @@ describe('BB questions', () => {
       modality: '74',
       cardAccountNumber: '12345678',
       cardNumber: '0000123456781111',
+    });
+  });
+
+  test('returns opened bill of credit card', async () => {
+    const bills = [
+      {
+        status: 'opened',
+        cardAccountNumber: '12345678',
+        billDate: '25022018',
+      },
+      {
+        status: 'closed',
+        cardAccountNumber: '12345678',
+        billId: '123123123',
+        billDate: '25012018',
+      },
+    ];
+    const creditCard = await askForBill(bills);
+
+    expect(creditCard).toMatchObject({
+      status: 'opened',
+      cardAccountNumber: '12345678',
+      billDate: '25022018',
     });
   });
 });

@@ -117,3 +117,28 @@ export async function askForCreditCard(creditCards) {
 
   return bbCreditCard;
 }
+
+export async function askForBill(bills) {
+  const { bbBill } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'bbBill',
+      message: 'Select the credit card bill:',
+      choices: bills.map(a => {
+        const billDate = `${a.billDate.slice(0, 2)}/${a.billDate.slice(
+          2,
+          4,
+        )}/${a.billDate.slice(4, 8)}`;
+
+        return {
+          value: a,
+          name: `${
+            a.status === 'opened' ? `Current Bill (${billDate})` : billDate
+          }`,
+        };
+      }),
+    },
+  ]);
+
+  return bbBill;
+}

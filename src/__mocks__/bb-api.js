@@ -52,6 +52,32 @@ export default function BB() {
         {
           getBills: () => [
             {
+              status: 'opened',
+              cardAccountNumber: '12345678',
+              billDate: '25022018',
+              getTransactions: () => [
+                {
+                  type: 'payment',
+                  date: new Date(`2018-01-01T00:00:00Z`),
+                  description: 'Credit Card Transaction 1',
+                  amount: 11.51,
+                },
+                {
+                  type: 'atSight',
+                  date: new Date(`2018-01-03T00:00:00Z`),
+                  description: 'Credit Card Transaction 2',
+                  amount: -7.2,
+                },
+                {
+                  type: 'installment',
+                  date: new Date(`2018-01-05T00:00:00Z`),
+                  description: 'Credit Card Transaction 3',
+                  amount: -8.31,
+                },
+              ],
+            },
+            {
+              status: 'closed',
               cardAccountNumber: '12345678',
               billId: '123123123',
               billDate: '25012018',

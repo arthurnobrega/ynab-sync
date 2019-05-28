@@ -7,6 +7,7 @@ import {
   askForFilter,
   askForSavingsAccount,
   askForCreditCard,
+  askForBill,
 } from './questions';
 
 const bb = new BB();
@@ -31,13 +32,9 @@ function parseFilter(filter) {
   return { year, month };
 }
 
-export default async function executeBBFlow({ args = null, ...action }) {
-  const data = {};
-  const username = action.username || (await askForUsername());
+async function getFilters(args) {
+  const filters = [];
 
-  const password = (args && args.password) || (await askForPassword(username));
-
-  let filters = [];
   if (args && args.syncLastTwoMonths) {
     filters.push(defaultFilter(true));
     filters.push(defaultFilter());
@@ -46,20 +43,28 @@ export default async function executeBBFlow({ args = null, ...action }) {
   } else {
     filters.push(await askForFilter());
   }
-  filters = filters.map(f => parseFilter(f));
+  return filters.map(f => parseFilter(f));
+}
 
-  if (!bb.isLoggedIn()) {
-    await bb.login({ ...username, password });
-  }
-
+export default async function executeBBFlow({ args = null, ...action }) {
+  const data = {};
   const { flow } = action;
+
+  const username = action.username || (await askForUsername());
+  const password = (args && args.password) || (await askForPassword(username));
+
+  await bb.login({ ...username, password });
   let transactions = [];
 
   if (!flow.type || flow.type === 'checking') {
+    const filters = await getFilters(args);
+
     transactions = await Promise.all(
       filters.map(filter => bb.checking.getTransactions(filter)),
     );
   } else if (flow.type === 'savings') {
+    const filters = await getFilters(args);
+
     const savingsAccounts = await bb.savings.getAccounts();
     const savingsAccount = action.savingsAccountVariation
       ? savingsAccounts.find(
@@ -80,13 +85,10 @@ export default async function executeBBFlow({ args = null, ...action }) {
 
     data.creditCardNumber = creditCard.cardNumber;
 
-    const creditCardBills = (await creditCard.getBills()).filter(b =>
-      filters.map(f => `${f.month}${f.year}`).includes(b.billDate.slice(2)),
-    );
+    const bills = await creditCard.getBills();
+    const bill = await askForBill(bills);
 
-    transactions = await Promise.all(
-      creditCardBills.map(b => b.getTransactions()),
-    );
+    transactions = await bill.getTransactions();
   }
 
   transactions = transactions.reduce((acc, item) => acc.concat(item), []);

@@ -37,6 +37,8 @@ export default {
         return { bbSavingsAccount: choices[0].value };
       case 'bbCreditCard':
         return { bbCreditCard: choices[0].value };
+      case 'bbBill':
+        return { bbBill: choices[0].value };
 
       // Nubank
       case 'username':
