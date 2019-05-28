@@ -3,6 +3,7 @@ const pad = n => n.toString().padStart(2, '0');
 export default function BB() {
   return {
     login: () => {},
+    isLoggedIn: () => false,
     checking: {
       getTransactions: ({ year, month }) => [
         {

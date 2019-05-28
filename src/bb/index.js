@@ -48,7 +48,9 @@ export default async function executeBBFlow({ args = null, ...action }) {
   }
   filters = filters.map(f => parseFilter(f));
 
-  await bb.login({ ...username, password });
+  if (!bb.isLoggedIn()) {
+    await bb.login({ ...username, password });
+  }
 
   const { flow } = action;
   let transactions = [];
