@@ -16,10 +16,11 @@ function parseTransactions(transactions) {
   return transactions.map(transaction => {
     const { description: memo, date, amount: sourceAmount } = transaction;
     const amount = parseInt(sourceAmount * 1000, 10);
-
+    const title = memo.match(/[A-Z][A-Z\s]+[A-Z]$/g);
     return {
       date,
       memo,
+      payee_name: title ? title[0] : null,
       amount: parseInt(sourceAmount * 1000, 10),
       import_id: md5(JSON.stringify({ date, memo, amount })),
     };
