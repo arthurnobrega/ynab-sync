@@ -24,12 +24,16 @@ async function processNubankCardData(filter) {
     }
 
     const transactions = bill.line_items.map(transaction => {
-      const { index, charges, title } = transaction;
+      const { index, charges, title, category } = transaction;
+      let memo = `${title} (${category})`;
+      memo =
+        charges && charges !== 1 ? `${memo}, ${index + 1}/${charges}` : memo;
       return {
         import_id: transaction.id,
         amount: parseInt(-1 * transaction.amount * 10, 10),
         date: transaction.post_date,
-        memo: charges !== 1 ? `${title}, ${index + 1}/${charges}` : title,
+        payee_name: title,
+        memo,
       };
     });
 
