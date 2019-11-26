@@ -1166,10 +1166,10 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-bb-api@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/bb-api/-/bb-api-2.3.2.tgz#d2139465c475c1962f13f3a8c4bc6138162735b2"
-  integrity sha512-kboLWNIvIKng2K/Tb4e4B3/xK83K53ywfmgXd2vOm2Y+N3xJpmZ4Z7WI0N0QZzVDYXLk3LK+x8/ayZNcVIzJhA==
+bb-api@^2.3.4:
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/bb-api/-/bb-api-2.3.4.tgz#6a1703532c02841600847e19e235bfde8e04c87c"
+  integrity sha512-17+R/B1upBQ8mg+q3xi9RKkA7CXAsZ39qyOWXe/peyEpHulzokP4jh3nT4sYMLz+PMgjs2fcCSaFtkREB5jQ+g==
   dependencies:
     "@babel/cli" "^7.4.4"
     "@babel/core" "^7.4.5"
